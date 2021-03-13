@@ -25,7 +25,7 @@ class BookAdapter(private val list: ArrayList<Book>, act : Activity) : RecyclerV
         val image = itemView.findViewById<ImageView>(R.id.ivBookTrue)
 
         fun bind(position: Book) {
-            itemView.setOnClickListener {  }
+            itemView.setOnClickListener { onClicked?.onBookClicked(position) }
         }
     }
 
@@ -54,13 +54,13 @@ class BookAdapter(private val list: ArrayList<Book>, act : Activity) : RecyclerV
         holder.author.text = books.author
         holder.rating.text = books.rating
 
+        holder.bind(books)
+
         try {
             Glide.with(act).load(books.bookCover).into(holder.image)
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
-        holder.bind(books)
     }
 
     override fun getItemCount(): Int = list.size

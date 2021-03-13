@@ -1,6 +1,7 @@
 package com.dteti.bookapp
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -30,9 +31,14 @@ class MainActivity : AppCompatActivity() {
 
         adapter.callableOnClick( object : BookAdapter.OnBookCLicked{
             override fun onBookClicked(data: Book) {
-                TODO("What to do when item is clicked")
+                moveAct()
             }
         })
+    }
+
+    fun moveAct() {
+        val intent = Intent(this, BookDetailActivity::class.java)
+        startActivity(intent)
     }
 
     fun drawableToBitmap(drawable: Int) : Bitmap {
