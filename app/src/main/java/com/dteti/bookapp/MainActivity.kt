@@ -8,7 +8,9 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +36,14 @@ class MainActivity : AppCompatActivity() {
                 moveAct()
             }
         })
+
+        val favNav = findViewById<ImageView>(R.id.ivFav)
+        val notifNav = findViewById<ImageView>(R.id.ivNotif)
+        val profileNav = findViewById<ImageView>(R.id.ivProfile)
+
+        favNav.setOnClickListener { toastNotYet() }
+        notifNav.setOnClickListener { toastNotYet() }
+        profileNav.setOnClickListener { toastNotYet() }
     }
 
     fun moveAct() {
@@ -53,5 +63,9 @@ class MainActivity : AppCompatActivity() {
         list.add(book1)
         list.add(book2)
         list.add(book3)
+    }
+
+    fun toastNotYet() {
+        Toast.makeText(this, "Not yet implemented", Toast.LENGTH_LONG).show()
     }
 }
