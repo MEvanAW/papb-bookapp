@@ -61,7 +61,6 @@ class BookTopicFragment : Fragment() {
          * @param topic The Books Topic.
          * @return A new instance of fragment BookTopicFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(topic: String) =
                 BookTopicFragment().apply {

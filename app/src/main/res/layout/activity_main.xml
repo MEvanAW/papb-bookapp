@@ -66,62 +66,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv2" />
 
-            <TextView
-                android:id="@+id/tvTrend"
-                android:layout_width="wrap_content"
+            <!-- Fragment Trending Books -->
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fr_trending_books"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="35dp"
-                android:text="Trending Books"
-                android:textColor="@color/black"
-                android:textFontWeight="500"
-                android:textSize="22sp"
-                app:layout_constraintStart_toStartOf="@+id/leftGuide"
-                app:layout_constraintTop_toBottomOf="@+id/searchBook" />
+                app:layout_constraintTop_toBottomOf="@id/searchBook"
+                app:layout_constraintLeft_toLeftOf="@id/leftGuide"
+                app:layout_constraintRight_toRightOf="parent"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvTrend"
+            <!-- Fragment Best-Selling Books -->
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fr_best_selling"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:orientation="horizontal"
-                android:scrollbars="horizontal"
-                android:paddingRight="30dp"
-                android:clipToPadding="false"
-                app:layout_constraintTop_toBottomOf="@id/tvTrend"
-                android:layout_marginTop="18dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
-
-            <TextView
-                android:id="@+id/tvBestSell"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Best-Selling Books"
                 android:layout_marginTop="48dp"
-                android:textSize="22sp"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="@id/leftGuide"
-                app:layout_constraintTop_toBottomOf="@+id/rvTrend" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvBestSell"
-                android:layout_width="match_parent"
-                android:layout_height="240sp"
-                android:layout_marginTop="18dp"
-                android:orientation="horizontal"
-                android:scrollbars="horizontal"
-                android:paddingRight="30dp"
-                android:clipToPadding="false"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvBestSell"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
+                app:layout_constraintTop_toBottomOf="@id/fr_trending_books"
+                app:layout_constraintLeft_toLeftOf="@id/leftGuide"
+                app:layout_constraintRight_toRightOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout

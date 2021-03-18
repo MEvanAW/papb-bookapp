@@ -15,6 +15,7 @@
             android:id="@+id/tv_book_topic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
             android:text="@string/topic"
             android:textColor="@color/black"
             android:textFontWeight="500"
