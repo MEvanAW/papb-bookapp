@@ -53,14 +53,15 @@ class BookAdapter(private val list: ArrayList<Book>, act : Activity) : RecyclerV
         holder.title.text = books.title
         holder.author.text = books.author
         holder.rating.text = books.rating
+        holder.image.setImageResource(books.bookCover)
 
         holder.bind(books)
 
-        try {
+        /*try {
             Glide.with(act).load(books.bookCover).into(holder.image)
         } catch (e: Exception) {
             e.printStackTrace()
-        }
+        }*/
     }
 
     override fun getItemCount(): Int = list.size

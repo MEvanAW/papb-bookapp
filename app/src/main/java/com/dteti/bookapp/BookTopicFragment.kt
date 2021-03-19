@@ -37,9 +37,9 @@ class BookTopicFragment : Fragment() {
         tvBookTopic.text = topic
         val adapter = BookAdapter(
             arrayListOf(
-                Book("Sapiens", "Yuval Noah Harari", "4.4", drawableToBitmap(R.drawable.sapiens)),
-                Book("The Land of Five Towers", "Ahmad Fuadi", "4.1", drawableToBitmap(R.drawable.the_land_of_five_towers)),
-                Book("Laskar Pelangi", "Andrea Hirata", "4.2", drawableToBitmap(R.drawable.laskar_pelangi))
+                Book("Sapiens", "Yuval Noah Harari", "4.4", R.drawable.sapiens),
+                Book("The Land of Five Towers", "Ahmad Fuadi", "4.1", R.drawable.the_land_of_five_towers),
+                Book("Laskar Pelangi", "Andrea Hirata", "4.2", R.drawable.laskar_pelangi)
             ), this.requireActivity())
         val rvBookTopic: RecyclerView = rootView.findViewById(R.id.rv_book_topic)
         rvBookTopic.setHasFixedSize(true)
@@ -68,9 +68,5 @@ class BookTopicFragment : Fragment() {
                         putString(ARG_TOPIC, topic)
                     }
                 }
-    }
-
-    fun drawableToBitmap(drawable: Int) : Bitmap {
-        return BitmapFactory.decodeResource(resources, drawable)
     }
 }
