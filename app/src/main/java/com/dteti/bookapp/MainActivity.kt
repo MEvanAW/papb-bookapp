@@ -39,4 +39,9 @@ class MainActivity : AppCompatActivity() {
     fun toastNotYet() {
         Toast.makeText(this, "Not yet implemented", Toast.LENGTH_LONG).show()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Toast.makeText(baseContext, "Successfully exited the app", Toast.LENGTH_SHORT).show()
+    }
 }
