@@ -73,13 +73,12 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     fun quoteToView() {
         getQuotes()
+        background = findViewById<ConstraintLayout>(R.id.quoteView)
         background.setBackgroundResource(backgroundArray[(0..3).random()])
         try {
             val textQuote = findViewById<TextView>(R.id.tvQuotes)
-            if (quotesJSON!!.length > 100) {
+            if (quotesJSON!!.length < 250) {
                 textQuote.text = quotesJSON
-            } else {
-                quoteToView()
             }
         } catch (e :Exception) {
             e.printStackTrace()
