@@ -99,9 +99,4 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         Toast.makeText(baseContext, "Successfully exited the app", Toast.LENGTH_SHORT).show()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Toast.makeText(baseContext, "Successfully exited the app", Toast.LENGTH_SHORT).show()
-    }
 }
