@@ -228,6 +228,45 @@
             app:layout_constraintRight_toRightOf="@id/cv_book_statistic"
             app:layout_constraintTop_toBottomOf="@+id/tv_synopsis" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/quoteView"
+            android:layout_width="350dp"
+            android:layout_height="128dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_synopsis_text"
+            android:background="@drawable/ic_group_171"
+            >
+
+            <TextView
+                android:id="@+id/tvQuotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="75dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginTop="12dp"
+                android:maxWidth="220dp"
+                android:maxHeight="100dp"
+                android:text="Quotes"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="6dp"
+                android:text="Next Quotes "
+                android:drawableRight="@drawable/ic_thin_arrow_right"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <!-- Fragment Similar Books -->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fr_similar_books"
@@ -235,7 +274,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:paddingBottom="35dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_synopsis_text"
+            app:layout_constraintTop_toBottomOf="@id/quoteView"
             app:layout_constraintLeft_toLeftOf="@id/tv_synopsis_text"
             app:layout_constraintRight_toRightOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
