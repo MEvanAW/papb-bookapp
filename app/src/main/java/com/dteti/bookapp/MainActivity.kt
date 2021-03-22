@@ -39,7 +39,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         background = findViewById<ConstraintLayout>(R.id.quoteView)
-        quotesToView()
+        suspend {
+            quotesToView()
+        }
 
         background.setOnClickListener { quotesToView() }
 
@@ -58,10 +60,8 @@ class MainActivity : AppCompatActivity() {
         background.setBackgroundResource(backgroundArray[(0..3).random()])
         try {
             val textQuote = findViewById<TextView>(R.id.tvQuotes)
-            if (quotesJSON!!.length > 100) {
+            if (quotesJSON!!.length < 250) {
                 textQuote.text = quotesJSON
-            } else {
-                quotesToView()
             }
         } catch (e :Exception) {
             e.printStackTrace()
