@@ -1,4 +1,4 @@
-package com.dteti.bookapp
+package com.dteti.bookapp.ui.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresPermission
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.dteti.bookapp.QuotesApi.QuotesJSON
-import com.dteti.bookapp.QuotesApi.RetrofitClient
+import com.dteti.bookapp.api.QuotesJSON
+import com.dteti.bookapp.api.RetrofitClient
+import com.dteti.bookapp.R
+import com.dteti.bookapp.ui.fragments.BookTopicFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

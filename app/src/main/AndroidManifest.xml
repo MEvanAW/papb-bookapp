@@ -12,9 +12,9 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
-        <activity android:name=".ReadingActivity"></activity>
-        <activity android:name=".BookDetailActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.activities.ReadingActivity"></activity>
+        <activity android:name=".ui.activities.BookDetailActivity" />
+        <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

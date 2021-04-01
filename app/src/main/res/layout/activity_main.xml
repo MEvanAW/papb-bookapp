@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".MainActivity"
+    tools:context=".ui.activities.MainActivity"
     android:scrollbars="vertical">
 
     <ScrollView
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:context=".MainActivity"
+        tools:context=".ui.activities.MainActivity"
         android:scrollbars="vertical"
         android:paddingBottom="90dp"
         android:clipToPadding="false">
@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".MainActivity"
+            tools:context=".ui.activities.MainActivity"
             android:scrollbars="vertical">
 
             <androidx.constraintlayout.widget.Guideline

@@ -1,4 +1,4 @@
-package com.dteti.bookapp
+package com.dteti.bookapp.model
 
 import android.graphics.Bitmap
 import android.media.Image
