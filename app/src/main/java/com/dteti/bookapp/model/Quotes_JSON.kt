@@ -1,4 +1,6 @@
-package com.dteti.bookapp.QuotesApi
+package com.dteti.bookapp.api
+
+import com.dteti.bookapp.model.Quotes
 
 data class QuotesJSON (
     val status : Int,

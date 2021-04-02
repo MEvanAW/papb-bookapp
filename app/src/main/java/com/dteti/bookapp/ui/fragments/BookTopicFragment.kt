@@ -1,8 +1,6 @@
-package com.dteti.bookapp
+package com.dteti.bookapp.ui.fragments
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.dteti.bookapp.adapter.BookAdapter
+import com.dteti.bookapp.R
+import com.dteti.bookapp.model.Book
+import com.dteti.bookapp.ui.activities.BookDetailActivity
 
 // The fragment initialization parameter(s)
 private const val ARG_TOPIC = "Topic"

@@ -1,18 +1,14 @@
-package com.dteti.bookapp
+package com.dteti.bookapp.adapter
 
 import android.app.Activity
-import android.service.autofill.Dataset
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.ImageView
-import android.widget.TextClock
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import java.lang.Exception
+import com.dteti.bookapp.R
+import com.dteti.bookapp.model.Book
 
 class BookAdapter(private val list: ArrayList<Book>, act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
@@ -39,15 +35,15 @@ class BookAdapter(private val list: ArrayList<Book>, act : Activity) : RecyclerV
         this.onClicked = onBookCLicked
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(
-            R.layout.custom_cardview,
+                R.layout.custom_cardview,
             parent,
             false
         ))
     }
 
-    override fun onBindViewHolder(holder: BookAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val books : Book = list.get(position)
 
         holder.title.text = books.title

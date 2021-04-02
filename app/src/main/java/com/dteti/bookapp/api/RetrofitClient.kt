@@ -1,4 +1,4 @@
-package com.dteti.bookapp.QuotesApi
+package com.dteti.bookapp.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
