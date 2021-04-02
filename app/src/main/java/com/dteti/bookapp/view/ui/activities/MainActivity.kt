@@ -1,4 +1,4 @@
-package com.dteti.bookapp.ui.activities
+package com.dteti.bookapp.view.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.dteti.bookapp.ui.fragments.BookTopicFragment
-import com.dteti.bookapp.api.QuotesJSON
-import com.dteti.bookapp.api.RetrofitClient
+import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
+import com.dteti.bookapp.data.model.QuotesJSON
+import com.dteti.bookapp.data.api.RetrofitClient
 import com.dteti.bookapp.R
 import retrofit2.Call
 import retrofit2.Callback
@@ -79,8 +79,8 @@ class MainActivity : AppCompatActivity() {
         RetrofitClient.instance.getApi().enqueue(
             object : Callback<QuotesJSON> {
                 override fun onResponse(
-                    call: Call<QuotesJSON>,
-                    response: Response<QuotesJSON>
+                        call: Call<QuotesJSON>,
+                        response: Response<QuotesJSON>
                 ) {
                     response.body().let { quotesJSON = it!!.quotes[0].text }
                 }

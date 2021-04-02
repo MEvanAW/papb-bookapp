@@ -1,4 +1,4 @@
-package com.dteti.bookapp.ui.activities
+package com.dteti.bookapp.view.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

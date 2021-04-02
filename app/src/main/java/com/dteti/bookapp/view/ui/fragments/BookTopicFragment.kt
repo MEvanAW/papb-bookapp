@@ -1,4 +1,4 @@
-package com.dteti.bookapp.ui.fragments
+package com.dteti.bookapp.view.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.dteti.bookapp.adapter.BookAdapter
+import com.dteti.bookapp.view.adapter.BookAdapter
 import com.dteti.bookapp.R
-import com.dteti.bookapp.model.Book
-import com.dteti.bookapp.ui.activities.BookDetailActivity
+import com.dteti.bookapp.data.model.Book
+import com.dteti.bookapp.view.ui.activities.BookDetailActivity
 
 // The fragment initialization parameter(s)
 private const val ARG_TOPIC = "Topic"
