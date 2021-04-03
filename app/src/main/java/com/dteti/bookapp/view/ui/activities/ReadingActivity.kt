@@ -1,8 +1,9 @@
-package com.dteti.bookapp
+package com.dteti.bookapp.view.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.dteti.bookapp.R
 
 class ReadingActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
