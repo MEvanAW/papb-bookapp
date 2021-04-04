@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.dteti.bookapp.R
+import com.dteti.bookapp.viewmodel.QuoteViewModel
 import com.dteti.bookapp.databinding.ActivityBookDetailBinding
 import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
 
