@@ -1,33 +1,24 @@
 package com.dteti.bookapp.view.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
-import com.dteti.bookapp.data.model.QuotesJSON
-import com.dteti.bookapp.data.api.RetrofitClient
 import com.dteti.bookapp.R
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.lang.Exception
+import com.dteti.bookapp.databinding.ActivityMainBinding
+import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
 
 class MainActivity : AppCompatActivity() {
     // fragmentManager initiation
     private lateinit var fragmentManager: FragmentManager
     private lateinit var transaction: FragmentTransaction
-    private var quotesJSON : String? = null
-    private val backgroundArray = arrayListOf(R.drawable.ic_group_171, R.drawable.ic_group_172, R.drawable.ic_group_173, R.drawable.ic_group_174)
-    private lateinit var background : ConstraintLayout
+    private lateinit var b : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        b = DataBindingUtil.setContentView(this, R.layout.activity_main)
         // assigning fragmentManager
         fragmentManager = supportFragmentManager
         // attaching fragments
@@ -40,60 +31,27 @@ class MainActivity : AppCompatActivity() {
             transaction.commit()
         }
 
-        background = findViewById<ConstraintLayout>(R.id.quoteView)
         suspend {
-            quotesToView()
+            QuoteViewModel.quotesToView(b.quoteView, this)
+            b.tvQuotes.text = QuoteViewModel.quotesGenerated
         }
 
-        background.setOnClickListener { quotesToView() }
-
-        val favNav = findViewById<ImageView>(R.id.ivFav)
-        val notifNav = findViewById<ImageView>(R.id.ivNotif)
-        val profileNav = findViewById<ImageView>(R.id.ivProfile)
-
-        favNav.setOnClickListener { toastNotYet() }
-        notifNav.setOnClickListener { toastNotYet() }
-        profileNav.setOnClickListener { toastNotYet() }
-    }
-
-    fun quotesToView() {
-        getQuotes()
-        background = findViewById<ConstraintLayout>(R.id.quoteView)
-        background.setBackgroundResource(backgroundArray[(0..3).random()])
-        try {
-            val textQuote = findViewById<TextView>(R.id.tvQuotes)
-            if (quotesJSON!!.length < 250) {
-                textQuote.text = quotesJSON
-            }
-        } catch (e :Exception) {
-            e.printStackTrace()
+        b.quoteView.setOnClickListener {
+            QuoteViewModel.quotesToView(b.quoteView, this)
+            b.tvQuotes.text = QuoteViewModel.quotesGenerated
         }
+        b.ivFav.setOnClickListener { toastNotYet() }
+        b.ivNotif.setOnClickListener { toastNotYet() }
+        b.ivProfile.setOnClickListener { toastNotYet() }
     }
 
     override fun onResume() {
-        quotesToView()
+        QuoteViewModel.quotesToView(b.quoteView, this)
+        b.tvQuotes.text = QuoteViewModel.quotesGenerated
         super.onResume()
     }
 
-    fun getQuotes() {
-        RetrofitClient.instance.getApi().enqueue(
-            object : Callback<QuotesJSON> {
-                override fun onResponse(
-                        call: Call<QuotesJSON>,
-                        response: Response<QuotesJSON>
-                ) {
-                    response.body().let { quotesJSON = it!!.quotes[0].text }
-                }
-
-                override fun onFailure(call: Call<QuotesJSON>, t: Throwable) {
-                    Toast.makeText(this@MainActivity, "Quotes unavailable while you're offline", Toast.LENGTH_SHORT).show()
-                    t.printStackTrace()
-                }
-            }
-        )
-    }
-
-    fun toastNotYet() {
+    private fun toastNotYet() {
         Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
     }
 
