@@ -190,8 +190,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:clickable="true"
                 android:focusable="true" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

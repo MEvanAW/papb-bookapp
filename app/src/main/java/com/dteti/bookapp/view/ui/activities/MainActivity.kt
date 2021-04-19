@@ -1,5 +1,6 @@
 package com.dteti.bookapp.view.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -41,9 +42,15 @@ class MainActivity : AppCompatActivity() {
             QuoteViewModel.quotesToView(b.quoteView, this)
             b.tvQuotes.text = QuoteViewModel.quotesGenerated
         }
-        b.ivFav.setOnClickListener { toastNotYet() }
+        b.ivFav.setOnClickListener {
+            val intent = Intent(this, BookshelfActivity::class.java)
+            startActivity(intent)
+        }
         b.ivNotif.setOnClickListener { toastNotYet() }
-        b.ivProfile.setOnClickListener { toastNotYet() }
+        b.ivProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {
