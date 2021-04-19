@@ -1,7 +1,4 @@
-package com.dteti.bookapp.model
-
-import android.graphics.Bitmap
-import android.media.Image
+package com.dteti.bookapp.data.model
 
 data class Book (
     val title : String,

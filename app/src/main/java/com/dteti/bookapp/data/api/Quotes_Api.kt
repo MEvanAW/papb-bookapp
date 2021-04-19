@@ -1,5 +1,6 @@
-package com.dteti.bookapp.api
+package com.dteti.bookapp.data.api
 
+import com.dteti.bookapp.data.model.QuotesJSON
 import retrofit2.Call
 import retrofit2.http.GET
 

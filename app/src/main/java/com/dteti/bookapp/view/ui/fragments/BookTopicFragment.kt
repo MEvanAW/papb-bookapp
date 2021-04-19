@@ -1,4 +1,4 @@
-package com.dteti.bookapp.ui.fragments
+package com.dteti.bookapp.view.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,12 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.dteti.bookapp.adapter.BookAdapter
-import com.dteti.bookapp.R
-import com.dteti.bookapp.model.Book
-import com.dteti.bookapp.ui.activities.BookDetailActivity
+import com.dteti.bookapp.view.adapter.BookAdapter
+import com.dteti.bookapp.data.model.Book
+import com.dteti.bookapp.databinding.FragmentBookTopicBinding
+import com.dteti.bookapp.view.ui.activities.BookDetailActivity
+import com.dteti.bookapp.viewmodel.BookTopicViewModel
 
 // The fragment initialization parameter(s)
 private const val ARG_TOPIC = "Topic"
@@ -22,6 +21,14 @@ private const val ARG_TOPIC = "Topic"
  * create an instance of this fragment.
  */
 class BookTopicFragment : Fragment() {
+    // View Model
+    private lateinit var bookTopicViewModel: BookTopicViewModel
+
+    // Data Binding
+    private var _binding: FragmentBookTopicBinding? = null
+    private val binding get() = _binding!!
+
+    // Parameter
     private var topic: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,25 +41,23 @@ class BookTopicFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val rootView = inflater.inflate(R.layout.fragment_book_topic, container, false)
-        val tvBookTopic: TextView = rootView.findViewById(R.id.tv_book_topic)
-        tvBookTopic.text = topic
-        val adapter = BookAdapter(
-            arrayListOf(
-                Book("Sapiens", "Yuval Noah Harari", "4.4", R.drawable.sapiens),
-                Book("The Land of Five Towers", "Ahmad Fuadi", "4.1", R.drawable.the_land_of_five_towers),
-                Book("Laskar Pelangi", "Andrea Hirata", "4.2", R.drawable.laskar_pelangi)
-            ), this.requireActivity())
-        val rvBookTopic: RecyclerView = rootView.findViewById(R.id.rv_book_topic)
-        rvBookTopic.setHasFixedSize(true)
-        rvBookTopic.adapter = adapter
-        adapter.callableOnClick(object: BookAdapter.OnBookCLicked{
+        _binding = FragmentBookTopicBinding.inflate(inflater, container, false)
+        binding.tvBookTopic.text = topic
+        binding.rvBookTopic.setHasFixedSize(true)
+        bookTopicViewModel = BookTopicViewModel(requireActivity())
+        binding.rvBookTopic.adapter = bookTopicViewModel.bookAdapter
+        bookTopicViewModel.bookAdapter.callableOnClick(object: BookAdapter.OnBookCLicked{
             override fun onBookClicked(data: Book){
                 val intent = Intent(context, BookDetailActivity::class.java)
                 startActivity(intent)
             }
         })
-        return rootView
+        return binding.root
+    }
+
+    override fun onDestroyView(){
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
@@ -60,7 +65,8 @@ class BookTopicFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param topic The Books Topic.
+         * @param topic The books topic.
+         * @param act The activity of the fragment.
          * @return A new instance of fragment BookTopicFragment.
          */
         @JvmStatic

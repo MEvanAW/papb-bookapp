@@ -1,4 +1,4 @@
-package com.dteti.bookapp.model
+package com.dteti.bookapp.data.model
 
 data class Quotes (
     val text : String,

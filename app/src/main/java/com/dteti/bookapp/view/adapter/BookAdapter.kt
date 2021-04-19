@@ -1,4 +1,4 @@
-package com.dteti.bookapp.adapter
+package com.dteti.bookapp.view.adapter
 
 import android.app.Activity
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dteti.bookapp.R
-import com.dteti.bookapp.model.Book
+import com.dteti.bookapp.data.model.Book
 
 class BookAdapter(private val list: ArrayList<Book>, act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
