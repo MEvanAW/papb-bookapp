@@ -2,10 +2,13 @@ package com.dteti.bookapp.view.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import com.dteti.bookapp.data.api.BooksRepository
 import com.dteti.bookapp.view.adapter.BookAdapter
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.databinding.FragmentBookTopicBinding
@@ -48,7 +51,15 @@ class BookTopicFragment : Fragment() {
         binding.tvBookTopic.text = topic
         binding.rvBookTopic.setHasFixedSize(true)
         bookTopicViewModel = BookTopicViewModel()
-        bookAdapter = bookTopicViewModel.getBookAdapterByTopic(topic!!, requireActivity())
+        bookAdapter = BookAdapter(mutableListOf(), requireActivity())
+        bookTopicViewModel.getBooksByTopic(topic!!).observe({lifecycle}, {
+            bookList ->
+            run {
+                bookAdapter.bookList = bookList
+                Log.d("RUN_OBSERVE", bookList.toString())
+                binding.rvBookTopic.adapter!!.notifyDataSetChanged()
+            }
+        })
         bookAdapter.callableOnClick(object: BookAdapter.OnBookCLicked{
             override fun onBookClicked(data: Book){
                 val intent = Intent(context, BookDetailActivity::class.java)

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
 
-class BookAdapter(private val list: List<Book>, act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
+class BookAdapter(internal var bookList: MutableList<Book>, act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
     var act = act
 
@@ -44,7 +44,7 @@ class BookAdapter(private val list: List<Book>, act : Activity) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val book : Book = list.get(position)
+        val book : Book = bookList.get(position)
 
         holder.title.text = book.title
         if (!book.authors.isNullOrEmpty())
@@ -61,6 +61,6 @@ class BookAdapter(private val list: List<Book>, act : Activity) : RecyclerView.A
         }*/
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = bookList.size
 
 }
