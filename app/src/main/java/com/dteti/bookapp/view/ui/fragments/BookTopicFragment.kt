@@ -31,6 +31,9 @@ class BookTopicFragment : Fragment() {
     // Parameter
     private var topic: String? = null
 
+    // Adapter
+    private lateinit var bookAdapter: BookAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -44,14 +47,15 @@ class BookTopicFragment : Fragment() {
         _binding = FragmentBookTopicBinding.inflate(inflater, container, false)
         binding.tvBookTopic.text = topic
         binding.rvBookTopic.setHasFixedSize(true)
-        bookTopicViewModel = BookTopicViewModel(requireActivity())
-        binding.rvBookTopic.adapter = bookTopicViewModel.bookAdapter
-        bookTopicViewModel.bookAdapter.callableOnClick(object: BookAdapter.OnBookCLicked{
+        bookTopicViewModel = BookTopicViewModel()
+        bookAdapter = bookTopicViewModel.getBookAdapterByTopic(topic!!, requireActivity())
+        bookAdapter.callableOnClick(object: BookAdapter.OnBookCLicked{
             override fun onBookClicked(data: Book){
                 val intent = Intent(context, BookDetailActivity::class.java)
                 startActivity(intent)
             }
         })
+        binding.rvBookTopic.adapter = bookAdapter
         return binding.root
     }
 
@@ -66,7 +70,6 @@ class BookTopicFragment : Fragment() {
          * this fragment using the provided parameters.
          *
          * @param topic The books topic.
-         * @param act The activity of the fragment.
          * @return A new instance of fragment BookTopicFragment.
          */
         @JvmStatic

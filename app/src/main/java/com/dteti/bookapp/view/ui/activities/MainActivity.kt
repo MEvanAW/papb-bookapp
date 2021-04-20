@@ -26,10 +26,10 @@ class MainActivity : AppCompatActivity() {
         // attaching fragments
         if (savedInstanceState == null){
             transaction = fragmentManager.beginTransaction()
-            transaction.add(R.id.fr_trending_books, BookTopicFragment.newInstance("Trending Books"))
+            transaction.add(R.id.fr_trending_books, BookTopicFragment.newInstance("Biography"))
             transaction.commit()
             transaction = fragmentManager.beginTransaction()
-            transaction.add(R.id.fr_best_selling, BookTopicFragment.newInstance("Best-Selling Books"))
+            transaction.add(R.id.fr_best_selling, BookTopicFragment.newInstance("Health"))
             transaction.commit()
         }
 

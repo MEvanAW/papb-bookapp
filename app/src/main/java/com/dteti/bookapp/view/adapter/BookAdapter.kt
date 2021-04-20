@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
 
-class BookAdapter(private val list: ArrayList<Book>, act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
+class BookAdapter(private val list: List<Book>, act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
     var act = act
 
@@ -44,14 +44,15 @@ class BookAdapter(private val list: ArrayList<Book>, act : Activity) : RecyclerV
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val books : Book = list.get(position)
+        val book : Book = list.get(position)
 
-        holder.title.text = books.title
-        holder.author.text = books.author
-        holder.rating.text = books.rating
-        holder.image.setImageResource(books.bookCover)
+        holder.title.text = book.title
+        if (!book.authors.isNullOrEmpty())
+            holder.author.text = book.authors[0]
+        holder.rating.text = book.averageRating.toString()
+        holder.image.setImageResource(R.drawable.the_land_of_five_towers)
 
-        holder.bind(books)
+        holder.bind(book)
 
         /*try {
             Glide.with(act).load(books.bookCover).into(holder.image)
