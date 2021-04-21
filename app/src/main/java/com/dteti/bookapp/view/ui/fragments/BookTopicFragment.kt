@@ -2,7 +2,6 @@ package com.dteti.bookapp.view.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -54,13 +53,13 @@ class BookTopicFragment : Fragment() {
             bookList ->
             run {
                 bookAdapter.bookList = bookList
-                Log.d("RUN_OBSERVE", bookList.toString())
                 binding.rvBookTopic.adapter!!.notifyDataSetChanged()
             }
         })
-        bookAdapter.callableOnClick(object: BookAdapter.OnBookCLicked{
-            override fun onBookClicked(data: Book){
+        bookAdapter.callableOnClick(object: BookAdapter.IOnBookClicked{
+            override fun onBookClicked(book: Book){
                 val intent = Intent(context, BookDetailActivity::class.java)
+                intent.putExtra("BOOK_DATA", book)
                 startActivity(intent)
             }
         })
