@@ -7,8 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import com.dteti.bookapp.data.api.BooksRepository
 import com.dteti.bookapp.view.adapter.BookAdapter
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.databinding.FragmentBookTopicBinding

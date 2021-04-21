@@ -6,7 +6,7 @@ import com.dteti.bookapp.data.api.BooksRepository
 import com.dteti.bookapp.data.model.Book
 
 class BookTopicViewModel() : ViewModel() {
-    val booksRepository = BooksRepository()
+    private val booksRepository = BooksRepository()
 
     fun getBooksByTopic(topic: String): MutableLiveData<MutableList<Book>>{
         return booksRepository.getBooksByTopic(topic)

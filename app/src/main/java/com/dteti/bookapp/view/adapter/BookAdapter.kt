@@ -12,12 +12,9 @@ import com.dteti.bookapp.data.model.Book
 
 class BookAdapter(internal var bookList: MutableList<Book>, act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
-    var act = act
-
     inner class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
         val title = itemView.findViewById<TextView>(R.id.tvTitle)
         val author = itemView.findViewById<TextView>(R.id.tvAuthor)
-        val rating = itemView.findViewById<TextView>(R.id.tvRating)
         val image = itemView.findViewById<ImageView>(R.id.ivBookTrue)
 
         fun bind(position: Book) {
@@ -49,8 +46,7 @@ class BookAdapter(internal var bookList: MutableList<Book>, act : Activity) : Re
         holder.title.text = book.title
         if (!book.authors.isNullOrEmpty())
             holder.author.text = book.authors[0]
-        holder.rating.text = book.averageRating.toString()
-        holder.image.setImageResource(R.drawable.the_land_of_five_towers)
+        holder.image.setImageResource(R.drawable.ic_book_cover_not_available)
 
         holder.bind(book)
 

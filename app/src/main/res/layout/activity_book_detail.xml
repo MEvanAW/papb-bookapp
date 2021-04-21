@@ -50,7 +50,7 @@
                 android:id="@+id/iv_book_cover"
                 android:layout_width="180dp"
                 android:layout_height="269dp"
-                android:src="@drawable/sapiens"
+                android:src="@drawable/ic_book_cover_not_available"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="48dp"
