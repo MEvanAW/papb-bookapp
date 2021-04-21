@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
 
-class BookAdapter(internal var bookList: MutableList<Book>, act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
+class BookAdapter(internal var bookList: MutableList<Book>, val act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
         val title = itemView.findViewById<TextView>(R.id.tvTitle)
@@ -46,7 +47,15 @@ class BookAdapter(internal var bookList: MutableList<Book>, act : Activity) : Re
         holder.title.text = book.title
         if (!book.authors.isNullOrEmpty())
             holder.author.text = book.authors[0]
-        holder.image.setImageResource(R.drawable.ic_book_cover_not_available)
+        when {
+            book.imageLinks == null -> holder.image.setImageResource(R.drawable.ic_book_cover_not_available)
+            book.imageLinks.thumbnail != null -> GlideLoad(book.imageLinks.thumbnail, holder)
+            book.imageLinks.small != null -> GlideLoad(book.imageLinks.small, holder)
+            book.imageLinks.smallThumbnail != null -> GlideLoad(book.imageLinks.smallThumbnail, holder)
+            book.imageLinks.large != null -> GlideLoad(book.imageLinks.large, holder)
+            book.imageLinks.extraLarge != null -> GlideLoad(book.imageLinks.extraLarge, holder)
+            else -> holder.image.setImageResource(R.drawable.ic_book_cover_not_available)
+        }
 
         holder.bind(book)
 
@@ -59,4 +68,8 @@ class BookAdapter(internal var bookList: MutableList<Book>, act : Activity) : Re
 
     override fun getItemCount(): Int = bookList.size
 
+    fun GlideLoad(url: String, holder: ViewHolder){
+        try { Glide.with(act).load(url).into(holder.image) }
+        catch (e: Exception) { e.printStackTrace() }
+    }
 }
