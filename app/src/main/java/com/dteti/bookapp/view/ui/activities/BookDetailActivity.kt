@@ -1,11 +1,13 @@
 package com.dteti.bookapp.view.ui.activities
 
-import android.content.Intent
-import android.graphics.Color
+import android.content.ComponentName
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsServiceConnection
+import androidx.browser.customtabs.CustomTabsSession
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
@@ -25,6 +27,11 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     // book data
     private var book: Book? = null
+
+    // custom tab
+    private var mCustomTabsServiceConnection: CustomTabsServiceConnection? = null
+    private var mClient: CustomTabsClient? = null
+    private var mCustomTabsSession: CustomTabsSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +64,23 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
             transaction.commit()
         }
 
+        // warm up the browser
+        mCustomTabsServiceConnection = object: CustomTabsServiceConnection(){
+            override fun onCustomTabsServiceConnected(name: ComponentName, client: CustomTabsClient) {
+                // pre-warming
+                mClient = client
+                mClient?.warmup(0L)
+                mCustomTabsSession = mClient?.newSession(null)
+                mCustomTabsSession!!.mayLaunchUrl(book!!.previewLink!!.toUri(),null,null)
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                mClient = null
+            }
+        }
+        if(mCustomTabsSession != null)
+            CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", mCustomTabsServiceConnection!!)
+
         // setting OnClickListeners
         binding.quoteView.setOnClickListener {
             QuoteViewModel.quotesToView(binding.quoteView, this)
@@ -74,10 +98,10 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)*/
                 if (book != null)
                     if (!book!!.previewLink.isNullOrBlank()){
-                        val builder = CustomTabsIntent.Builder()
+                        var builder = CustomTabsIntent.Builder()
+                        if (mCustomTabsSession != null)
+                            builder = CustomTabsIntent.Builder(mCustomTabsSession)
                         // builder.setActionButton(icon, description, pendingIntent, tint)
-                        // builder.setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left)
-                        // builder.setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right)
                         val customTabsIntent = builder.build()
                         customTabsIntent.launchUrl(this, book!!.previewLink!!.toUri())
                     }
