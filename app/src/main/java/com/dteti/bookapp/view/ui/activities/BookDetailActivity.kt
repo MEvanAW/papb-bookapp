@@ -1,9 +1,12 @@
 package com.dteti.bookapp.view.ui.activities
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -67,8 +70,17 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         when(v?.id){
             R.id.iv_back -> finish()
             R.id.tv_start_reading -> {
-                val intent = Intent(this, ReadingActivity::class.java)
-                startActivity(intent)
+                /*val intent = Intent(this, ReadingActivity::class.java)
+                startActivity(intent)*/
+                if (book != null)
+                    if (!book!!.previewLink.isNullOrBlank()){
+                        val builder = CustomTabsIntent.Builder()
+                        // builder.setActionButton(icon, description, pendingIntent, tint)
+                        // builder.setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left)
+                        // builder.setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right)
+                        val customTabsIntent = builder.build()
+                        customTabsIntent.launchUrl(this, book!!.previewLink!!.toUri())
+                    }
             }
         }
     }
