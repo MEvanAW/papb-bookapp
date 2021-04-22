@@ -3,6 +3,7 @@ package com.dteti.bookapp.view.ui.activities
 import android.content.ComponentName
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsIntent
@@ -104,6 +105,11 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
                         // builder.setActionButton(icon, description, pendingIntent, tint)
                         val customTabsIntent = builder.build()
                         customTabsIntent.launchUrl(this, book!!.previewLink!!.toUri())
+                        Toast.makeText(
+                            this,
+                            "It is recommended to have Google Chrome as default browser " +
+                                "and use landscape orientation.",
+                            Toast.LENGTH_LONG).show()
                     }
             }
         }
