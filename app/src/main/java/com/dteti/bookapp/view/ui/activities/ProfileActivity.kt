@@ -23,7 +23,7 @@ class ProfileActivity : AppCompatActivity() {
         // attaching fragments
         if (savedInstanceState == null){
             transaction = fragmentManager.beginTransaction()
-            transaction.add(R.id.fr_reading_books, BookTopicFragment.newInstance("Biography", ""))
+            transaction.add(R.id.fr_reading_books, BookTopicFragment.newInstance("Biography", "", null))
             transaction.commit()
         }
 

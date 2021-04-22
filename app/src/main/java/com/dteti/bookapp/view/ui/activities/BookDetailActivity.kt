@@ -46,11 +46,11 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
             transaction = fragmentManager.beginTransaction()
             if (book != null){
                 if (!book!!.categories.isNullOrEmpty())
-                    topic = book!!.categories!![0]
+                    topic = "\"" + book!!.categories!![0].replace(" ", "+") + "\""
                 else if (!book!!.title.isNullOrBlank())
-                    topic = book!!.title!!
+                    topic = book!!.title!!.replace(" ", "+")
             }
-            transaction.add(R.id.fr_similar_books, BookTopicFragment.newInstance(topic,"Similar Books"))
+            transaction.add(R.id.fr_similar_books, BookTopicFragment.newInstance(topic,"Similar Books", book))
             transaction.commit()
         }
 

@@ -9,6 +9,6 @@ class BookTopicViewModel() : ViewModel() {
     private val booksRepository = BooksRepository()
 
     fun getBooksByTopic(topic: String): MutableLiveData<MutableList<Book>>{
-        return booksRepository.getBooksByTopic("\"" + topic.replace(" ", "+") + "\"")
+        return booksRepository.getBooksByTopic(topic)
     }
 }

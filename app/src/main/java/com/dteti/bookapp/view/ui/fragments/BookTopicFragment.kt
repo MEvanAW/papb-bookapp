@@ -16,6 +16,7 @@ import com.dteti.bookapp.viewmodel.BookTopicViewModel
 // The fragment initialization parameter(s)
 private const val ARG_TOPIC = "Topic"
 private const val ARG_TV_TEXT = "TvText"
+private const val ARG_BOOK = "Book"
 
 /**
  * A simple [Fragment] subclass to hold a book topic.
@@ -33,6 +34,7 @@ class BookTopicFragment : Fragment() {
     // Parameter
     private var topic: String? = null
     private var tvText: String? = null
+    private var book: Book? = null
 
     // Adapter
     private lateinit var bookAdapter: BookAdapter
@@ -42,6 +44,7 @@ class BookTopicFragment : Fragment() {
         arguments?.let {
             topic = it.getString(ARG_TOPIC)
             tvText = it.getString(ARG_TV_TEXT)
+            book = it.getParcelable(ARG_BOOK)
         }
     }
 
@@ -49,15 +52,17 @@ class BookTopicFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = FragmentBookTopicBinding.inflate(inflater, container, false)
-        Log.d("TV_TEXT", "Activity: ${requireActivity()}, tvText: $tvText")
+        Log.d("BOOK", "Activity: ${requireActivity()}, book: $book")
         binding.tvBookTopic.text = tvText
         binding.rvBookTopic.setHasFixedSize(true)
         bookTopicViewModel = BookTopicViewModel()
         bookAdapter = BookAdapter(mutableListOf(), requireActivity())
-        bookTopicViewModel.getBooksByTopic(topic!!).observe({lifecycle}, {
-            bookList ->
+        bookTopicViewModel.getBooksByTopic(topic!!).observe({ lifecycle }, { bookList ->
             run {
                 bookAdapter.bookList = bookList
+                Log.d("CONTAINS", bookAdapter.bookList.contains(book).toString())
+                if (book != null)
+                    bookAdapter.bookList.filter { toRemove: Book -> toRemove.title.equals(book!!.title) }.forEach { bookAdapter.bookList.remove(it) }
                 binding.rvBookTopic.adapter!!.notifyDataSetChanged()
             }
         })
@@ -87,11 +92,12 @@ class BookTopicFragment : Fragment() {
          * @return A new instance of fragment BookTopicFragment.
          */
         @JvmStatic
-        fun newInstance(topic: String, tvText: String) =
+        fun newInstance(topic: String, tvText: String, book: Book?) =
             BookTopicFragment().apply {
                 arguments = Bundle().apply{
                     putString(ARG_TOPIC, topic)
                     putString(ARG_TV_TEXT, tvText)
+                    putParcelable(ARG_BOOK, book)
                 }
             }
     }
