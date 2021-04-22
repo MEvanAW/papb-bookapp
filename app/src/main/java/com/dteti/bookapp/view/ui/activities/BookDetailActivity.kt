@@ -27,15 +27,6 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_book_detail)
 
-        // assigning fragmentManager
-        fragmentManager = supportFragmentManager
-        // attaching fragments
-        if (savedInstanceState == null){
-            transaction = fragmentManager.beginTransaction()
-            transaction.add(R.id.fr_similar_books, BookTopicFragment.newInstance("Similar Books"))
-            transaction.commit()
-        }
-
         // accepting EXTRA
         book = intent.getParcelableExtra("BOOK_DATA")
 
@@ -45,6 +36,23 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         // viewing quotes
         QuoteViewModel.quotesToView(binding.quoteView, this)
         binding.tvQuotes.text = QuoteViewModel.quotesGenerated
+
+        // assigning fragmentManager
+        fragmentManager = supportFragmentManager
+
+        // attaching fragments
+        if (savedInstanceState == null){
+            var topic = ""
+            transaction = fragmentManager.beginTransaction()
+            if (book != null){
+                if (!book!!.categories.isNullOrEmpty())
+                    topic = book!!.categories!![0]
+                else if (!book!!.title.isNullOrBlank())
+                    topic = book!!.title!!
+            }
+            transaction.add(R.id.fr_similar_books, BookTopicFragment.newInstance(topic,"Similar Books"))
+            transaction.commit()
+        }
 
         // setting OnClickListeners
         binding.quoteView.setOnClickListener {

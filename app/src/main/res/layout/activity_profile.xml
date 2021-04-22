@@ -80,7 +80,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Read"
+                            android:text="@string/have_read"
                             android:textSize="12sp"
                             android:layout_marginTop="10dp"
                             android:layout_gravity="center"
@@ -104,7 +104,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2"
+                            android:text="10"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_gravity="center"
@@ -113,7 +113,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reading"
+                            android:text="@string/reading_now"
                             android:textSize="12sp"
                             android:layout_marginTop="10dp"
                             android:layout_gravity="center"
@@ -146,7 +146,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Wishlist"
+                            android:text="@string/to_read"
                             android:textSize="12sp"
                             android:layout_marginTop="10dp"
                             android:layout_gravity="center"
@@ -165,27 +165,33 @@
                 app:layout_constraintTop_toBottomOf="@id/cv_user_statistic">
 
                 <TextView
-                    android:id="@+id/tv_reading_now"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Reading now"
+                    android:text="@string/have_read"
                     android:textColor="#F2375E"
                     android:textStyle="bold"
                     android:textSize="18sp"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    android:layout_marginTop="24dp"/>
 
                 <TextView
-                    android:id="@+id/tv_have_read"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Already read"
+                    android:text="@string/reading_now"
                     android:textColor="#C4C4C4"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    android:layout_marginTop="24dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/to_read"
+                    android:textColor="#C4C4C4"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="24dp"/>
             </LinearLayout>
 
             <!-- Fragment Similar Books -->

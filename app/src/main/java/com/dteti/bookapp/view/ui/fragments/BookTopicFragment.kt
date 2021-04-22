@@ -2,6 +2,7 @@ package com.dteti.bookapp.view.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.dteti.bookapp.viewmodel.BookTopicViewModel
 
 // The fragment initialization parameter(s)
 private const val ARG_TOPIC = "Topic"
+private const val ARG_TV_TEXT = "TvText"
 
 /**
  * A simple [Fragment] subclass to hold a book topic.
@@ -30,6 +32,7 @@ class BookTopicFragment : Fragment() {
 
     // Parameter
     private var topic: String? = null
+    private var tvText: String? = null
 
     // Adapter
     private lateinit var bookAdapter: BookAdapter
@@ -38,6 +41,7 @@ class BookTopicFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             topic = it.getString(ARG_TOPIC)
+            tvText = it.getString(ARG_TV_TEXT)
         }
     }
 
@@ -45,7 +49,8 @@ class BookTopicFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = FragmentBookTopicBinding.inflate(inflater, container, false)
-        binding.tvBookTopic.text = topic
+        Log.d("TV_TEXT", "Activity: ${requireActivity()}, tvText: $tvText")
+        binding.tvBookTopic.text = tvText
         binding.rvBookTopic.setHasFixedSize(true)
         bookTopicViewModel = BookTopicViewModel()
         bookAdapter = BookAdapter(mutableListOf(), requireActivity())
@@ -78,14 +83,16 @@ class BookTopicFragment : Fragment() {
          * this fragment using the provided parameters.
          *
          * @param topic The books topic.
+         * @param tvText Text to be shown for the TextView.
          * @return A new instance of fragment BookTopicFragment.
          */
         @JvmStatic
-        fun newInstance(topic: String) =
-                BookTopicFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_TOPIC, topic)
-                    }
+        fun newInstance(topic: String, tvText: String) =
+            BookTopicFragment().apply {
+                arguments = Bundle().apply{
+                    putString(ARG_TOPIC, topic)
+                    putString(ARG_TV_TEXT, tvText)
                 }
+            }
     }
 }

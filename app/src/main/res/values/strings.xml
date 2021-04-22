@@ -7,4 +7,7 @@
     <string name="pages">Pages</string>
     <string name="description">Description</string>
     <string name="next_quotes">Next Quotes</string>
+    <string name="have_read">Have Read</string>
+    <string name="reading_now">Reading Now</string>
+    <string name="to_read">To Read</string>
 </resources>
