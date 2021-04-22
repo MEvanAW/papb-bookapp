@@ -2,7 +2,6 @@ package com.dteti.bookapp.view.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -52,7 +51,6 @@ class BookTopicFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = FragmentBookTopicBinding.inflate(inflater, container, false)
-        Log.d("BOOK", "Activity: ${requireActivity()}, book: $book")
         binding.tvBookTopic.text = tvText
         binding.rvBookTopic.setHasFixedSize(true)
         bookTopicViewModel = BookTopicViewModel()
@@ -60,7 +58,6 @@ class BookTopicFragment : Fragment() {
         bookTopicViewModel.getBooksByTopic(topic!!).observe({ lifecycle }, { bookList ->
             run {
                 bookAdapter.bookList = bookList
-                Log.d("CONTAINS", bookAdapter.bookList.contains(book).toString())
                 if (book != null)
                     bookAdapter.bookList.filter { toRemove: Book -> toRemove.title.equals(book!!.title) }.forEach { bookAdapter.bookList.remove(it) }
                 binding.rvBookTopic.adapter!!.notifyDataSetChanged()
