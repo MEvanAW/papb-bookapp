@@ -27,14 +27,8 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null){
             transaction = fragmentManager.beginTransaction()
             transaction.add(R.id.fr_rv_1, BookTopicFragment.newInstance("Biography", "Biography", null))
-            transaction.commit()
-            transaction = fragmentManager.beginTransaction()
             transaction.add(R.id.fr_rv_2, BookTopicFragment.newInstance("\"Self+Help\"", "Self Help", null))
-            transaction.commit()
-            transaction = fragmentManager.beginTransaction()
             transaction.add(R.id.fr_rv_3, BookTopicFragment.newInstance("Health OR Fitness OR Dieting", "Health, Fitness, and Dieting", null))
-            transaction.commit()
-            transaction = fragmentManager.beginTransaction()
             transaction.add(R.id.fr_rv_4, BookTopicFragment.newInstance("Business OR Money","Business and Money", null))
             transaction.commit()
         }

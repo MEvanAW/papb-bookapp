@@ -94,19 +94,12 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
             else -> binding.ivBookCover.setImageResource(R.drawable.ic_book_cover_not_available)
         }
         // fill title
-        if (book!!.title != null)
-            binding.tvBookTitle.text = book!!.title
-        else
-            binding.tvBookTitle.text = "No Title"
+        binding.tvBookTitle.text = book!!.title
         // fill authors
-        if (book!!.authors != null){
-            var authors = ""
-            for(author in book!!.authors!!)
-                authors += "$author, "
-            binding.tvBookAuthor.text = authors.dropLast(2)
-        }
-        else
-            binding.tvBookAuthor.text = "Anonym"
+        var authors = ""
+        for(author in book!!.authors!!)
+            authors += "$author, "
+        binding.tvBookAuthor.text = authors.dropLast(2)
         // fill rating
         if (book!!.averageRating != null)
             binding.tvRating.text = book!!.averageRating.toString()
