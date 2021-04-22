@@ -4,7 +4,7 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.dteti.bookapp.R
-import com.dteti.bookapp.data.api.RetrofitClient
+import com.dteti.bookapp.data.api.QuoteClient
 import com.dteti.bookapp.data.model.QuotesJSON
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,7 +28,7 @@ object QuoteViewModel {
     }
 
     fun getQuotes(act : Activity) {
-        RetrofitClient.instance.getApi().enqueue(
+        QuoteClient.instance.getApi().enqueue(
             object : Callback<QuotesJSON> {
                 override fun onResponse(
                     call: Call<QuotesJSON>,

@@ -2,4 +2,12 @@
     <string name="app_name">BookApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="topic">Topic</string>
+    <string name="rating">Rating</string>
+    <string name="category">Category</string>
+    <string name="pages">Pages</string>
+    <string name="description">Description</string>
+    <string name="next_quotes">Next Quotes</string>
+    <string name="have_read">Have Read</string>
+    <string name="reading_now">Reading Now</string>
+    <string name="to_read">To Read</string>
 </resources>
