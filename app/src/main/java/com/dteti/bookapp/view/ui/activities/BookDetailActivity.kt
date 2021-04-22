@@ -1,9 +1,15 @@
 package com.dteti.bookapp.view.ui.activities
 
-import android.content.Intent
+import android.content.ComponentName
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsServiceConnection
+import androidx.browser.customtabs.CustomTabsSession
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -22,6 +28,11 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     // book data
     private var book: Book? = null
+
+    // custom tab
+    private var mCustomTabsServiceConnection: CustomTabsServiceConnection? = null
+    private var mClient: CustomTabsClient? = null
+    private var mCustomTabsSession: CustomTabsSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +65,23 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
             transaction.commit()
         }
 
+        // warm up the browser
+        mCustomTabsServiceConnection = object: CustomTabsServiceConnection(){
+            override fun onCustomTabsServiceConnected(name: ComponentName, client: CustomTabsClient) {
+                // pre-warming
+                mClient = client
+                mClient?.warmup(0L)
+                mCustomTabsSession = mClient?.newSession(null)
+                mCustomTabsSession!!.mayLaunchUrl(book!!.previewLink!!.toUri(),null,null)
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {
+                mClient = null
+            }
+        }
+        if(mCustomTabsSession != null)
+            CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", mCustomTabsServiceConnection!!)
+
         // setting OnClickListeners
         binding.quoteView.setOnClickListener {
             QuoteViewModel.quotesToView(binding.quoteView, this)
@@ -67,8 +95,22 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         when(v?.id){
             R.id.iv_back -> finish()
             R.id.tv_start_reading -> {
-                val intent = Intent(this, ReadingActivity::class.java)
-                startActivity(intent)
+                /*val intent = Intent(this, ReadingActivity::class.java)
+                startActivity(intent)*/
+                if (book != null)
+                    if (!book!!.previewLink.isNullOrBlank()){
+                        var builder = CustomTabsIntent.Builder()
+                        if (mCustomTabsSession != null)
+                            builder = CustomTabsIntent.Builder(mCustomTabsSession)
+                        // builder.setActionButton(icon, description, pendingIntent, tint)
+                        val customTabsIntent = builder.build()
+                        customTabsIntent.launchUrl(this, book!!.previewLink!!.toUri())
+                        Toast.makeText(
+                            this,
+                            "It is recommended to have Google Chrome as default browser " +
+                                "and use landscape orientation.",
+                            Toast.LENGTH_LONG).show()
+                    }
             }
         }
     }
