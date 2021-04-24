@@ -26,10 +26,10 @@ class MainActivity : AppCompatActivity() {
         // attaching fragments
         if (savedInstanceState == null){
             transaction = fragmentManager.beginTransaction()
-            transaction.add(R.id.fr_trending_books, BookTopicFragment.newInstance("Trending Books"))
-            transaction.commit()
-            transaction = fragmentManager.beginTransaction()
-            transaction.add(R.id.fr_best_selling, BookTopicFragment.newInstance("Best-Selling Books"))
+            transaction.add(R.id.fr_rv_1, BookTopicFragment.newInstance("Biography", "Biography", null))
+            transaction.add(R.id.fr_rv_2, BookTopicFragment.newInstance("\"Self+Help\"", "Self Help", null))
+            transaction.add(R.id.fr_rv_3, BookTopicFragment.newInstance("Health OR Fitness OR Dieting", "Health, Fitness, and Dieting", null))
+            transaction.add(R.id.fr_rv_4, BookTopicFragment.newInstance("Business OR Money","Business and Money", null))
             transaction.commit()
         }
 
@@ -61,10 +61,5 @@ class MainActivity : AppCompatActivity() {
 
     private fun toastNotYet() {
         Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Toast.makeText(baseContext, "Successfully exited the app", Toast.LENGTH_SHORT).show()
     }
 }

@@ -14,6 +14,8 @@ import com.dteti.bookapp.viewmodel.BookTopicViewModel
 
 // The fragment initialization parameter(s)
 private const val ARG_TOPIC = "Topic"
+private const val ARG_TV_TEXT = "TvText"
+private const val ARG_BOOK = "Book"
 
 /**
  * A simple [Fragment] subclass to hold a book topic.
@@ -30,11 +32,18 @@ class BookTopicFragment : Fragment() {
 
     // Parameter
     private var topic: String? = null
+    private var tvText: String? = null
+    private var book: Book? = null
+
+    // Adapter
+    private lateinit var bookAdapter: BookAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             topic = it.getString(ARG_TOPIC)
+            tvText = it.getString(ARG_TV_TEXT)
+            book = it.getParcelable(ARG_BOOK)
         }
     }
 
@@ -42,16 +51,26 @@ class BookTopicFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = FragmentBookTopicBinding.inflate(inflater, container, false)
-        binding.tvBookTopic.text = topic
+        binding.tvBookTopic.text = tvText
         binding.rvBookTopic.setHasFixedSize(true)
-        bookTopicViewModel = BookTopicViewModel(requireActivity())
-        binding.rvBookTopic.adapter = bookTopicViewModel.bookAdapter
-        bookTopicViewModel.bookAdapter.callableOnClick(object: BookAdapter.OnBookCLicked{
-            override fun onBookClicked(data: Book){
+        bookTopicViewModel = BookTopicViewModel()
+        bookAdapter = BookAdapter(mutableListOf(), requireActivity())
+        bookTopicViewModel.getBooksByTopic(topic!!).observe({ lifecycle }, { bookList ->
+            run {
+                bookAdapter.bookList = bookList
+                if (book != null)
+                    bookAdapter.bookList.filter { toRemove: Book -> toRemove.title.equals(book!!.title) }.forEach { bookAdapter.bookList.remove(it) }
+                binding.rvBookTopic.adapter!!.notifyDataSetChanged()
+            }
+        })
+        bookAdapter.callableOnClick(object: BookAdapter.IOnBookClicked{
+            override fun onBookClicked(book: Book){
                 val intent = Intent(context, BookDetailActivity::class.java)
+                intent.putExtra("BOOK_DATA", book)
                 startActivity(intent)
             }
         })
+        binding.rvBookTopic.adapter = bookAdapter
         return binding.root
     }
 
@@ -66,15 +85,17 @@ class BookTopicFragment : Fragment() {
          * this fragment using the provided parameters.
          *
          * @param topic The books topic.
-         * @param act The activity of the fragment.
+         * @param tvText Text to be shown for the TextView.
          * @return A new instance of fragment BookTopicFragment.
          */
         @JvmStatic
-        fun newInstance(topic: String) =
-                BookTopicFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_TOPIC, topic)
-                    }
+        fun newInstance(topic: String, tvText: String, book: Book?) =
+            BookTopicFragment().apply {
+                arguments = Bundle().apply{
+                    putString(ARG_TOPIC, topic)
+                    putString(ARG_TV_TEXT, tvText)
+                    putParcelable(ARG_BOOK, book)
                 }
+            }
     }
 }
