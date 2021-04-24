@@ -13,6 +13,8 @@ import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
@@ -24,7 +26,10 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
     // fragmentManager initiation
     private lateinit var fragmentManager: FragmentManager
     private lateinit var transaction: FragmentTransaction
+
+    //data binding and view model
     private lateinit var binding : ActivityBookDetailBinding
+    private lateinit var quoteViewModel : QuoteViewModel
 
     // book data
     private var book: Book? = null
@@ -44,9 +49,10 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         // assigns book data into views
         fillViewsWithData()
 
-        // viewing quotes
-        QuoteViewModel.quotesToView(binding.quoteView, this)
-        binding.tvQuotes.text = QuoteViewModel.quotesGenerated
+        quoteViewModel = ViewModelProviders.of(this).get(QuoteViewModel::class.java)
+
+        // get Quote
+        quoteViewModel.getQuotes(this)
 
         // assigning fragmentManager
         fragmentManager = supportFragmentManager
@@ -84,11 +90,16 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         // setting OnClickListeners
         binding.quoteView.setOnClickListener {
-            QuoteViewModel.quotesToView(binding.quoteView, this)
-            binding.tvQuotes.text = QuoteViewModel.quotesGenerated
+            quoteViewModel.getQuotes(this)
         }
         binding.ivBack.setOnClickListener(this)
         binding.tvStartReading.setOnClickListener(this)
+
+        //set observable
+        quoteViewModel.quotesGenerated.observe(this, Observer {
+            binding.tvQuotes.text = quoteViewModel.quotesGenerated.value
+        })
+
     }
 
     override fun onClick(v: View?) {
@@ -117,8 +128,7 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     // Refreshes quote when activity resumes
     override fun onResume() {
-        QuoteViewModel.quotesToView(binding.quoteView, this)
-        binding.tvQuotes.text = QuoteViewModel.quotesGenerated
+        quoteViewModel.getQuotes(this)
         super.onResume()
     }
 

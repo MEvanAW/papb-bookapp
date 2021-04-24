@@ -3,6 +3,8 @@ package com.dteti.bookapp.viewmodel
 import android.app.Activity
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.api.QuoteClient
 import com.dteti.bookapp.data.model.QuotesJSON
@@ -10,16 +12,22 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object QuoteViewModel {
+class QuoteViewModel : ViewModel() {
 
     private val backgroundArray = arrayListOf(R.drawable.ic_group_171, R.drawable.ic_group_172, R.drawable.ic_group_173, R.drawable.ic_group_174)
-    var quotesGenerated : String = ""
+    var quotesGenerated= MutableLiveData<String>()
+    var background = MutableLiveData<Int>()
 
-    fun quotesToView(clBackground : ConstraintLayout, act : Activity) {
+    init {
+        quotesGenerated.value = ""
+        background.value = backgroundArray[0]
+    }
+
+    fun quotesToView(act : Activity) {
         getQuotes(act)
-        clBackground.setBackgroundResource(backgroundArray[(0..3).random()])
+        background.value = backgroundArray[(0..3).random()]
         try {
-            if (quotesGenerated.length < 250) {
+            if (quotesGenerated.value!!.length < 250) {
                 getQuotes(act)
             }
         } catch (e :Exception) {
@@ -34,7 +42,7 @@ object QuoteViewModel {
                     call: Call<QuotesJSON>,
                     response: Response<QuotesJSON>
                 ) {
-                    response.body().let { quotesGenerated = it!!.quotes[0].text }
+                    response.body().let { quotesGenerated.value = it!!.quotes[0].text }
                 }
 
                 override fun onFailure(call: Call<QuotesJSON>, t: Throwable) {
