@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "book")
 data class BookRoom(
     @PrimaryKey val id: Int,
     val title : String = "No Title",
@@ -19,5 +19,6 @@ data class BookRoom(
     val medium: String? = null,
     val large: String? = null,
     @ColumnInfo(name = "extra_large") val extraLarge: String? = null,
-    @ColumnInfo(name = "preview_link") val previewLink: String? = null
+    @ColumnInfo(name = "preview_link") val previewLink: String? = null,
+    @ColumnInfo(name = "book_status") val bookStatus: BookStatus
 )
