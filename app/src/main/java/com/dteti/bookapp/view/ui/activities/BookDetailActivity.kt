@@ -21,14 +21,16 @@ import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.viewmodel.QuoteViewModel
 import com.dteti.bookapp.databinding.ActivityBookDetailBinding
 import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
+import com.dteti.bookapp.viewmodel.BookDetailViewModel
 
 class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
     // fragmentManager initiation
     private lateinit var fragmentManager: FragmentManager
     private lateinit var transaction: FragmentTransaction
 
-    //data binding and view model
+    //data binding and view models
     private lateinit var binding : ActivityBookDetailBinding
+    private lateinit var bookDetailViewModel : BookDetailViewModel
     private lateinit var quoteViewModel : QuoteViewModel
 
     // book data
@@ -49,7 +51,9 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         // assigns book data into views
         fillViewsWithData()
 
+        // assigns view models
         quoteViewModel = ViewModelProviders.of(this).get(QuoteViewModel::class.java)
+        bookDetailViewModel = ViewModelProviders.of(this).get(BookDetailViewModel::class.java)
 
         // get Quote
         quoteViewModel.getQuotes(this)
@@ -106,8 +110,6 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         when(v?.id){
             R.id.iv_back -> finish()
             R.id.tv_start_reading -> {
-                /*val intent = Intent(this, ReadingActivity::class.java)
-                startActivity(intent)*/
                 if (book != null)
                     if (!book!!.previewLink.isNullOrBlank()){
                         var builder = CustomTabsIntent.Builder()
@@ -121,6 +123,7 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
                             "It is recommended to have Google Chrome as default browser " +
                                 "and use landscape orientation.",
                             Toast.LENGTH_LONG).show()
+                        bookDetailViewModel.insertBookAsReadingNow(book!!)
                     }
             }
         }
@@ -128,8 +131,8 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     // Refreshes quote when activity resumes
     override fun onResume() {
-        quoteViewModel.getQuotes(this)
         super.onResume()
+        quoteViewModel.getQuotes(this)
     }
 
     private fun fillViewsWithData(){
@@ -149,7 +152,7 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         binding.tvBookTitle.text = book!!.title
         // fill authors
         var authors = ""
-        for(author in book!!.authors!!)
+        for(author in book!!.authors)
             authors += "$author, "
         binding.tvBookAuthor.text = authors.dropLast(2)
         // fill rating

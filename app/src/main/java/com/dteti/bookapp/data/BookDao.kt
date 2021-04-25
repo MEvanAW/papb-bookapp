@@ -9,7 +9,7 @@ interface BookDao {
     fun getAll(): List<BookRoom>
 
     @Insert
-    fun insertAll(vararg books: BookRoom)
+    suspend fun insertAll(vararg books: BookRoom)
 
     @Delete
     fun delete(book: BookRoom)
