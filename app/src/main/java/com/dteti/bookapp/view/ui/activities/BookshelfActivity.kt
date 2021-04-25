@@ -5,28 +5,49 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import com.dteti.bookapp.R
+import com.dteti.bookapp.data.model.Book
+import com.dteti.bookapp.databinding.ActivityBookshelfBinding
+import com.dteti.bookapp.view.adapter.BookAdapter
+import com.dteti.bookapp.view.adapter.BookshelfAdapter
 
 class BookshelfActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityBookshelfBinding
+    private lateinit var bookshelf : MutableList<Book>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bookshelf)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_bookshelf)
 
-        val notifNav = findViewById<ImageView>(R.id.ivNotif)
-        val profileNav = findViewById<ImageView>(R.id.ivProfile)
-        val homeNav = findViewById<ImageView>(R.id.ivHome)
+        //get bookshelf list
+        bookshelf = mutableListOf()
 
-        notifNav.setOnClickListener {
+        //onClickListener
+        binding.ivNotif.setOnClickListener {
             toastNotYet()
         }
-        profileNav.setOnClickListener {
+        binding.ivProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
-        homeNav.setOnClickListener {
+        binding.ivHome.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        //Assign recyclerview adapter
+        binding.rvBookshelf.setHasFixedSize(true)
+        val adapter = BookshelfAdapter(bookshelf, this)
+        binding.rvBookshelf.adapter = adapter
+        adapter.callableOnClick(object: BookshelfAdapter.OnItemClicked{
+            override fun onItemClicked(book: Book){
+                val intent = Intent(this@BookshelfActivity, BookDetailActivity::class.java)
+                intent.putExtra("BOOK_DATA", book)
+                startActivity(intent)
+            }
+        })
     }
 
     fun toastNotYet() {
