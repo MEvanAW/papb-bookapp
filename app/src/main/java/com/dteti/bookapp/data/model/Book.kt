@@ -12,5 +12,6 @@ data class Book (
     val categories: List<String>? = null,
     val averageRating : Double? = null,
     val imageLinks: ImageLinks? = null,
-    val previewLink: String? = null
+    val previewLink: String? = null,
+    val bookStatus: BookStatus? = null
 ) : Parcelable
