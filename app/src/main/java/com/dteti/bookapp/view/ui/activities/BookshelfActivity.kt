@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
+import com.dteti.bookapp.data.model.ImageLinks
 import com.dteti.bookapp.databinding.ActivityBookshelfBinding
 import com.dteti.bookapp.view.adapter.BookshelfAdapter
 import com.dteti.bookapp.viewmodel.BookshelfViewModel
@@ -38,8 +38,27 @@ class BookshelfActivity : AppCompatActivity() {
         binding.rvBookshelf.adapter = adapter
 
         // get bookshelf
-        bookshelfViewModel.getAllBook().observe({ lifecycle }, { bookshelf ->
+        bookshelfViewModel.getAllBook().observe({ lifecycle }, { bookRooms ->
             run {
+                val bookshelf: MutableList<Book> = mutableListOf()
+                bookRooms.forEach{ bookRoom -> bookshelf.add(Book(
+                    bookRoom.title,
+                    bookRoom.authors,
+                    bookRoom.description,
+                    bookRoom.pageCount,
+                    bookRoom.categories,
+                    bookRoom.averageRating,
+                    ImageLinks(
+                        bookRoom.smallThumbnail,
+                        bookRoom.thumbnail,
+                        bookRoom.small,
+                        bookRoom.medium,
+                        bookRoom.large,
+                        bookRoom.extraLarge
+                    ),
+                    bookRoom.previewLink,
+                    bookRoom.bookStatus
+                ))}
                 adapter.bookshelf = bookshelf
                 binding.rvBookshelf.adapter!!.notifyDataSetChanged()
             }
@@ -66,7 +85,7 @@ class BookshelfActivity : AppCompatActivity() {
         }
     }
 
-    fun toastNotYet() {
+    private fun toastNotYet() {
         Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
     }
 }

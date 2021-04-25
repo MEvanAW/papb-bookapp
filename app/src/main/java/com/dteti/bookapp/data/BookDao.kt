@@ -6,7 +6,7 @@ import com.dteti.bookapp.data.model.BookRoom
 @Dao
 interface BookDao {
     @Query("SELECT * FROM book")
-    fun getAll(): List<BookRoom>
+    suspend fun getAll(): List<BookRoom>
 
     @Insert
     suspend fun insertAll(vararg books: BookRoom)

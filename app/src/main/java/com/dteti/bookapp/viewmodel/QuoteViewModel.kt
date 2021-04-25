@@ -42,7 +42,7 @@ class QuoteViewModel : ViewModel() {
                     call: Call<QuotesJSON>,
                     response: Response<QuotesJSON>
                 ) {
-                    response.body().let { quotesGenerated.value = it!!.quotes[0].text }
+                    response.body().let { if (it != null) quotesGenerated.value = it.quotes[0].text }
                 }
 
                 override fun onFailure(call: Call<QuotesJSON>, t: Throwable) {
