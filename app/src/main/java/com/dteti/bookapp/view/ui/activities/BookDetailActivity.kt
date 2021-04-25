@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
@@ -22,6 +23,7 @@ import com.dteti.bookapp.viewmodel.QuoteViewModel
 import com.dteti.bookapp.databinding.ActivityBookDetailBinding
 import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
 import com.dteti.bookapp.viewmodel.BookDetailViewModel
+import com.dteti.bookapp.viewmodel.BookDetailViewModelFactory
 
 class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
     // fragmentManager initiation
@@ -53,7 +55,8 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         // assigns view models
         quoteViewModel = ViewModelProviders.of(this).get(QuoteViewModel::class.java)
-        bookDetailViewModel = ViewModelProviders.of(this).get(BookDetailViewModel::class.java)
+        val bookDetailViewModelFactory = BookDetailViewModelFactory(application)
+        bookDetailViewModel = ViewModelProvider(this, bookDetailViewModelFactory).get(BookDetailViewModel::class.java)
 
         // get Quote
         quoteViewModel.getQuotes(this)

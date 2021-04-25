@@ -1,16 +1,16 @@
 package com.dteti.bookapp.viewmodel
 
-import android.content.Context
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.ImageLinks
 import kotlinx.coroutines.launch
 
-class BookShelfViewModel(context: Context) : ViewModel() {
-    private val db = AppDatabase.getInstance(context)
+class BookshelfViewModel(application: Application) : AndroidViewModel(application) {
+    private val db = AppDatabase.getInstance(application)
     private val bookDao = db.bookDao()
     fun getAllBook(): MutableLiveData<MutableList<Book>>{
         val bookListLiveData = MutableLiveData<MutableList<Book>>()

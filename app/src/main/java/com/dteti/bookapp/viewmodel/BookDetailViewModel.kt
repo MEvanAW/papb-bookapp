@@ -1,7 +1,7 @@
 package com.dteti.bookapp.viewmodel
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.model.Book
@@ -9,8 +9,8 @@ import com.dteti.bookapp.data.model.BookRoom
 import com.dteti.bookapp.data.model.BookStatus
 import kotlinx.coroutines.launch
 
-class BookDetailViewModel(context: Context): ViewModel() {
-    private val db = AppDatabase.getInstance(context)
+class BookDetailViewModel(application: Application): AndroidViewModel(application) {
+    private val db = AppDatabase.getInstance(application)
     private val bookDao = db.bookDao()
     fun insertBookAsReadingNow(book: Book){
         viewModelScope.launch{
