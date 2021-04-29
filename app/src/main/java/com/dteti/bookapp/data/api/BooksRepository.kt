@@ -39,7 +39,7 @@ class BooksRepository {
     fun getBooks(q: String): MutableLiveData<MutableList<Book>> {
         val bookListLiveData = MutableLiveData<MutableList<Book>>()
         val bookList: MutableList<Book> = mutableListOf()
-        client.getBooks(q).enqueue(
+        client.getBooks(q.replace(' ', '+')).enqueue(
             object: Callback<BooksApiResponse>{
                 override fun onResponse(
                     call: Call<BooksApiResponse>,
