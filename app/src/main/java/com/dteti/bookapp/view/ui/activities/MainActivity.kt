@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         })
 
         // set listeners
-        b.searchBook
         b.quoteView.setOnClickListener {
             quoteViewModel.getQuotes(this)
         }
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         b.searchBook.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val intent = Intent(applicationContext, SearchActivity::class.java)
-                // TODO: put Extra to intent
+                intent.putExtra("QUERY", query)
                 startActivity(intent)
                 return false
             }
