@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         })
 
         // set listeners
-        b.searchBook
         b.quoteView.setOnClickListener {
             quoteViewModel.getQuotes(this)
         }

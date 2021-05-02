@@ -34,8 +34,6 @@ class SearchActivity : AppCompatActivity() {
         query = intent.getStringExtra("QUERY")
 
         // set tv uhoh description text
-        searchBook.setQuery(query, false)
-        searchBook.clearFocus()
         tv_uhoh_description.text = "We couldn’t find any results for $query.\nTry searching something else!"
 
         // set and assign recyclerView adapter
@@ -74,8 +72,7 @@ class SearchActivity : AppCompatActivity() {
         })
 
         // set searchView default text value
-        //searchBook.setQuery(query, false)
-        //searchBook.clearFocus()
+        searchBook.setQuery(query, false)
     }
 
     //check book availability
