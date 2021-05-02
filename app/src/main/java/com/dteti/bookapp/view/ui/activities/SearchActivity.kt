@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
@@ -55,6 +56,26 @@ class SearchActivity : AppCompatActivity() {
                 isBookFound(bookList)
             }
         })
+
+        // set listeners
+        searchBook.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchViewModel.getBooks(query!!).observe({ lifecycle }, { bookList ->
+                    run{
+                        isBookFound(bookList)
+                    }
+                })
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // TODO: consider text change processing
+                return false
+            }
+        })
+
+        // set searchView default text value
+        //searchBook.setQuery(query, false)
+        //searchBook.clearFocus()
     }
 
     //check book availability
