@@ -2,6 +2,7 @@ package com.dteti.bookapp.view.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -38,11 +39,18 @@ class MainActivity : AppCompatActivity() {
             transaction.commit()
         }
 
-        //Get View Model
+        // get view model
         quoteViewModel = ViewModelProviders.of(this).get(QuoteViewModel::class.java)
 
         quoteViewModel.getQuotes(this)
 
+        quoteViewModel.quotesGenerated.observe(this, Observer {
+            b.tvQuotes.text = quoteViewModel.quotesGenerated.value
+            b.quoteView.setBackgroundResource(quoteViewModel.background.value!!)
+        })
+
+        // set listeners
+        b.searchBook
         b.quoteView.setOnClickListener {
             quoteViewModel.getQuotes(this)
         }
@@ -55,10 +63,17 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
-
-        quoteViewModel.quotesGenerated.observe(this, Observer {
-            b.tvQuotes.text = quoteViewModel.quotesGenerated.value
-            b.quoteView.setBackgroundResource(quoteViewModel.background.value!!)
+        b.searchBook.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                val intent = Intent(applicationContext, SearchActivity::class.java)
+                // TODO: put Extra to intent
+                startActivity(intent)
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // TODO: consider text change processing
+                return false
+            }
         })
     }
 
