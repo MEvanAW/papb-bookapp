@@ -19,7 +19,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        tv_uhoh_description.text = "We couldn’t find any results for {{query}}. /nTry searching something else!"
+        tv_uhoh_description.text = "We couldn’t find any results for {{query}}.\nTry searching something else!"
 
         bookAdapter = BookAdapter(mutableListOf(), this)
         bookAdapter.callableOnClick(object: BookAdapter.IOnBookClicked{
