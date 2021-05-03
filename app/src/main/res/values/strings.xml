@@ -10,4 +10,6 @@
     <string name="have_read">Have Read</string>
     <string name="reading_now">Reading Now</string>
     <string name="to_read">To Read</string>
+    <string name="channelIdReminder">Reminder</string>
+    <string name="channelNameReminder">Reminder</string>
 </resources>

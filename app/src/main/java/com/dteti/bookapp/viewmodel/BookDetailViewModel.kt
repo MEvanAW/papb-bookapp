@@ -1,17 +1,26 @@
 package com.dteti.bookapp.viewmodel
 
 import android.app.Application
+import android.app.NotificationManager
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BookRoom
 import com.dteti.bookapp.data.model.BookStatus
+import com.dteti.bookapp.view.utils.sendNotification
 import kotlinx.coroutines.launch
 
-class BookDetailViewModel(application: Application): AndroidViewModel(application) {
-    private val db = AppDatabase.getInstance(application)
+class BookDetailViewModel(val app: Application): AndroidViewModel(app) {
+
+    //initiate room database
+    private val db = AppDatabase.getInstance(app)
     private val bookDao = db.bookDao()
+
+    //notification manager
+    var notificationManager = ContextCompat.getSystemService(app, NotificationManager::class.java) as NotificationManager
+
     fun insertBookAsReadingNow(book: Book){
         viewModelScope.launch{
             bookDao.insertAll(
@@ -33,5 +42,9 @@ class BookDetailViewModel(application: Application): AndroidViewModel(applicatio
                 )
             )
         }
+    }
+
+    fun pushNotification() {
+        notificationManager.sendNotification(app)
     }
 }

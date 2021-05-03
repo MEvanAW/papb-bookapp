@@ -11,8 +11,8 @@ interface BookDao {
     @Insert
     suspend fun insertAll(vararg books: BookRoom)
 
-    @Delete
-    fun delete(book: BookRoom)
+    @Query("DELETE FROM book WHERE title = :title")
+    suspend fun delete(title: String)
 
     @Update
     fun updateBook(vararg books: BookRoom)

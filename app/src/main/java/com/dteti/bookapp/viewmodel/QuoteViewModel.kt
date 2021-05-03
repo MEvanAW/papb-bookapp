@@ -23,18 +23,6 @@ class QuoteViewModel : ViewModel() {
         background.value = backgroundArray[0]
     }
 
-    fun quotesToView(act : Activity) {
-        getQuotes(act)
-        background.value = backgroundArray[(0..3).random()]
-        try {
-            if (quotesGenerated.value!!.length < 250) {
-                getQuotes(act)
-            }
-        } catch (e :Exception) {
-            e.printStackTrace()
-        }
-    }
-
     fun getQuotes(act : Activity) {
         QuoteClient.instance.getApi().enqueue(
             object : Callback<QuotesJSON> {

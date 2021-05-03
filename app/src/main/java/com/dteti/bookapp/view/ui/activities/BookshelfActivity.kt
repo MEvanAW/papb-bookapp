@@ -5,14 +5,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.dteti.bookapp.R
+import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.model.Book
+import com.dteti.bookapp.data.model.BookRoom
 import com.dteti.bookapp.data.model.ImageLinks
 import com.dteti.bookapp.databinding.ActivityBookshelfBinding
 import com.dteti.bookapp.view.adapter.BookshelfAdapter
 import com.dteti.bookapp.viewmodel.BookshelfViewModel
 import com.dteti.bookapp.viewmodel.BookshelfViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class BookshelfActivity : AppCompatActivity() {
     // data binding
@@ -21,6 +29,7 @@ class BookshelfActivity : AppCompatActivity() {
     // view model
     private lateinit var bookshelfViewModel: BookshelfViewModel
 
+    private var bookRoom = MutableLiveData<List<BookRoom>>()
     // custom tab
     // TODO: declare custom tab variables
 
@@ -38,7 +47,8 @@ class BookshelfActivity : AppCompatActivity() {
         binding.rvBookshelf.adapter = adapter
 
         // get bookshelf
-        bookshelfViewModel.getAllBook().observe({ lifecycle }, { bookRooms ->
+        bookRoom = bookshelfViewModel.getAllBook()
+        bookRoom.observe({ lifecycle }, { bookRooms ->
             run {
                 val bookshelf: MutableList<Book> = mutableListOf()
                 bookRooms.forEach{ bookRoom -> bookshelf.add(Book(
@@ -65,11 +75,20 @@ class BookshelfActivity : AppCompatActivity() {
         })
 
         //onClickListener
-        adapter.callableOnClick(object: BookshelfAdapter.OnItemClicked{
-            override fun onItemClicked(book: Book){
+        adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
+            //when Continue Reading button in BookShelf Clicked
+            override fun onItemClicked(book: Book) {
                 val intent = Intent(this@BookshelfActivity, BookDetailActivity::class.java)
                 intent.putExtra("BOOK_DATA", book)
                 startActivity(intent)
+            }
+
+            //when delete button in BookShelf Clicked
+            override fun onDeleteClicked(book: Book) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    bookshelfViewModel.deleteBook(book)
+                    bookshelfViewModel.getAllBook()
+                }
             }
         })
         binding.ivNotif.setOnClickListener {
