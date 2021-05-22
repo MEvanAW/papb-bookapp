@@ -4,6 +4,8 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -42,9 +44,12 @@ class BookshelfAdapter(var bookshelf : MutableList<Book>, val act : Activity) : 
         var title = itemView.findViewById<TextView>(R.id.tvTitleShelf)
         var author = itemView.findViewById<TextView>(R.id.tvAuthorShelf)
         var image = itemView.findViewById<ImageView>(R.id.ivBookShelf)
+        var continueRead = itemView.findViewById<Button>(R.id.bt_continueShelf)
+        var delete = itemView.findViewById<ImageButton>(R.id.bt_removeShelf)
 
         fun bind(book: Book) {
-            itemView.setOnClickListener { onClicked?.onItemClicked(book) }
+            continueRead.setOnClickListener { onClicked?.onItemClicked(book) }
+            delete.setOnClickListener { onClicked?.onDeleteClicked(book) }
         }
     }
 
@@ -57,14 +62,16 @@ class BookshelfAdapter(var bookshelf : MutableList<Book>, val act : Activity) : 
     //set interface
     interface OnItemClicked {
         fun onItemClicked(book: Book)
+        fun onDeleteClicked(book: Book)
     }
 
     //set onclick variable
     var onClicked : OnItemClicked? = null
+    var onDeleteClicked : OnItemClicked? = null
 
     fun callableOnClick(onBookClicked: OnItemClicked) {
         this.onClicked = onBookClicked
+        this.onDeleteClicked = onDeleteClicked
     }
-
 
 }

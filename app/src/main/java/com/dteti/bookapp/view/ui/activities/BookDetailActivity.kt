@@ -1,7 +1,14 @@
 package com.dteti.bookapp.view.ui.activities
 
-import android.content.ComponentName
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.*
+import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,11 +26,11 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
-import com.dteti.bookapp.viewmodel.QuoteViewModel
 import com.dteti.bookapp.databinding.ActivityBookDetailBinding
 import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
-import com.dteti.bookapp.viewmodel.BookDetailViewModel
-import com.dteti.bookapp.viewmodel.BookDetailViewModelFactory
+import com.dteti.bookapp.view.utils.NotifReceiver
+import com.dteti.bookapp.view.utils.sendNotification
+import com.dteti.bookapp.viewmodel.*
 
 class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
     // fragmentManager initiation
@@ -34,6 +41,9 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding : ActivityBookDetailBinding
     private lateinit var bookDetailViewModel : BookDetailViewModel
     private lateinit var quoteViewModel : QuoteViewModel
+
+    //try notification
+    private lateinit var prefs : SharedPreferences
 
     // book data
     private var book: Book? = null
@@ -46,6 +56,12 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_book_detail)
+
+        //create notification channel
+        createNotificationChannel(getString(R.string.channelIdReminder), getString(R.string.channelNameReminder))
+
+        //set reading reminder
+        setNotification()
 
         // accepting EXTRA
         book = intent.getParcelableExtra("BOOK_DATA")
@@ -176,8 +192,37 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
             binding.tvDescriptionText.text = book!!.description + "\n"
     }
 
+    //load Image using Glide
     private fun glideLoad(url: String){
         try { Glide.with(this).load(url).into(binding.ivBookCover) }
         catch (e: Exception) { e.printStackTrace() }
     }
+
+    //notification Channel
+    private fun createNotificationChannel(channelId : String, channelName: String) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_LOW
+            )
+
+            notificationChannel.enableVibration(true)
+
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
+    private fun setNotification() {
+        val intent = Intent(this, NotifReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val delay =  24 * 60 * 60 * 1000L
+//        val delaytest : Long = 2000
+        val futureInMillis = SystemClock.elapsedRealtime() + delay
+        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent)
+    }
+
 }
