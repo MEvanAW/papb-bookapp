@@ -29,7 +29,9 @@ class BookshelfActivity : AppCompatActivity() {
     // view model
     private lateinit var bookshelfViewModel: BookshelfViewModel
 
+    // attribute
     private var bookRoom = MutableLiveData<List<BookRoom>>()
+
     // custom tab
     // TODO: declare custom tab variables
 

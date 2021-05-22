@@ -8,26 +8,67 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.dteti.bookapp.R
+import com.dteti.bookapp.data.model.Book
+import com.dteti.bookapp.data.model.BookRoom
+import com.dteti.bookapp.data.model.ImageLinks
+import com.dteti.bookapp.view.adapter.BookAdapter
 import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
+import com.dteti.bookapp.viewmodel.ProfileViewModel
+import com.dteti.bookapp.viewmodel.ProfileViewModelFactory
 
 class ProfileActivity : AppCompatActivity() {
+    // view model
+    private lateinit var profileViewModel: ProfileViewModel
 
-    private lateinit var fragmentManager: FragmentManager
-    private lateinit var transaction: FragmentTransaction
+    // attribute
+    private var bookRoom = MutableLiveData<List<BookRoom>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        fragmentManager = supportFragmentManager
-        // attaching fragments
-        if (savedInstanceState == null){
-            transaction = fragmentManager.beginTransaction()
-            transaction.add(R.id.fr_reading_books, BookTopicFragment.newInstance("Biography", "", null))
-            transaction.commit()
-        }
+        // assign view model
+        val profileViewModelFactory = ProfileViewModelFactory(application)
+        profileViewModel = ViewModelProvider(this, profileViewModelFactory).get(ProfileViewModel::class.java)
 
+        // assign recyclew view adapter
+        val rvProfileBooks = findViewById<RecyclerView>(R.id.rv_profile_books)
+        val adapter = BookAdapter(mutableListOf(), this)
+        rvProfileBooks.adapter = adapter
+
+        // get profile books
+        bookRoom = profileViewModel.getAllBook()
+        bookRoom.observe({ lifecycle }, { bookRooms ->
+            run {
+                val bookList: MutableList<Book> = mutableListOf()
+                bookRooms.forEach{ bookRoom -> bookList.add(Book(
+                    bookRoom.title,
+                    bookRoom.authors,
+                    bookRoom.description,
+                    bookRoom.pageCount,
+                    bookRoom.categories,
+                    bookRoom.averageRating,
+                    ImageLinks(
+                        bookRoom.smallThumbnail,
+                        bookRoom.thumbnail,
+                        bookRoom.small,
+                        bookRoom.medium,
+                        bookRoom.large,
+                        bookRoom.extraLarge
+                    ),
+                    bookRoom.previewLink,
+                    bookRoom.bookStatus
+                ))}
+                adapter.bookList = bookList
+                rvProfileBooks.adapter!!.notifyDataSetChanged()
+            }
+        })
+
+        // on click listeners
         val favNav = findViewById<ImageView>(R.id.ivFav)
         val notifNav = findViewById<ImageView>(R.id.ivNotif)
         val homeNav = findViewById<ImageView>(R.id.ivHome)
