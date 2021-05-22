@@ -5,14 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.dteti.bookapp.data.AppDatabase
-import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BookRoom
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
-
-class BookshelfViewModel(application: Application) : AndroidViewModel(application) {
+class ProfileViewModel(application: Application) : AndroidViewModel(application) {
     private val db = AppDatabase.getInstance(application)
     private val bookDao = db.bookDao()
     private var bookListLiveData = MutableLiveData<List<BookRoom>>()
@@ -23,11 +19,4 @@ class BookshelfViewModel(application: Application) : AndroidViewModel(applicatio
         }
         return bookListLiveData
     }
-
-    suspend fun deleteBook(book : Book){
-        viewModelScope.launch(Dispatchers.IO) {
-            bookDao.delete(book.title)
-        }
-    }
-
 }
