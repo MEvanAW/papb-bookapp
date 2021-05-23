@@ -12,17 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.ui.activities.SearchActivity"></activity>
-        <activity android:name=".view.ui.activities.ProfileActivity" />
-        <activity android:name=".view.ui.activities.BookshelfActivity" />
-        <activity android:name=".view.ui.activities.BookDetailActivity" />
-        <activity android:name=".view.ui.activities.MainActivity">
+        <activity android:name=".view.ui.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.ui.activities.SearchActivity" />
+        <activity android:name=".view.ui.activities.ProfileActivity" />
+        <activity android:name=".view.ui.activities.BookshelfActivity" />
+        <activity android:name=".view.ui.activities.BookDetailActivity" />
+        <activity android:name=".view.ui.activities.MainActivity"/>
         <receiver android:name=".view.utils.NotifReceiver" />
     </application>
 
