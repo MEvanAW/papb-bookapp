@@ -12,10 +12,12 @@ import com.dteti.bookapp.view.adapter.BookAdapter
 import com.dteti.bookapp.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.activity_search.view.*
+import org.koin.android.viewmodel.compat.ScopeCompat.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     // view model
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchViewModel: SearchViewModel by viewModel()
 
     // adapter
     private lateinit var bookAdapter: BookAdapter
@@ -26,9 +28,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        // get view model
-        searchViewModel = SearchViewModel()
 
         // accepting EXTRA
         query = intent.getStringExtra("QUERY")

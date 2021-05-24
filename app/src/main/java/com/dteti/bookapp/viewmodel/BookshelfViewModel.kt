@@ -10,13 +10,14 @@ import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.BookDao
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BookRoom
+import com.dteti.bookapp.di.Dependencies
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 
 class BookshelfViewModel(application: Application) : AndroidViewModel(application) {
-    private val db = AppDatabase.getInstance(application)
+    private val db = Dependencies().appDatabase
     private val bookDao = db.bookDao()
     private var bookListLiveData = MutableLiveData<List<BookRoom>>()
 

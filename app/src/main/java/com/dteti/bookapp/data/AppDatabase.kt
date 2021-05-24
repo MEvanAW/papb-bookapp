@@ -12,7 +12,7 @@ import com.dteti.bookapp.data.model.BookRoom
 abstract class AppDatabase: RoomDatabase() {
     abstract fun bookDao(): BookDao
     companion object{
-        private var INSTANCE: AppDatabase? = null
+        var INSTANCE: AppDatabase? = null
         fun getInstance(context: Context): AppDatabase{
             synchronized(this){
                 var instance = INSTANCE

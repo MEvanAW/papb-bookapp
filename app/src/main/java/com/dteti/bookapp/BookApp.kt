@@ -1,9 +1,7 @@
 package com.dteti.bookapp
 
 import android.app.Application
-import com.dteti.bookapp.di.vmBookDetail
-import com.dteti.bookapp.di.vmBookShelf
-import com.dteti.bookapp.di.vmQuote
+import com.dteti.bookapp.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -16,7 +14,7 @@ class BookApp : Application() {
         startKoin {
             androidLogger(Level.NONE)
             androidContext(this@BookApp)
-            modules(listOf(vmBookDetail, vmQuote, vmBookShelf))
+            modules(listOf(vmBookDetail, vmQuote, vmBookShelf, vmSearch, quoteClient, bookClient, BooksRepo, appDatabase))
         }
     }
 }

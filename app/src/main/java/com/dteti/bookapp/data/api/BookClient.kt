@@ -3,6 +3,7 @@ package com.dteti.bookapp.data.api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+//no longer applied, moved to Koin Dependencies in Dependencies.kt
 object BookClient {
     private const val base_url = "https://www.googleapis.com/books/v1/"
 
