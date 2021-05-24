@@ -4,11 +4,12 @@ import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.*
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +22,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
@@ -29,8 +29,10 @@ import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.databinding.ActivityBookDetailBinding
 import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
 import com.dteti.bookapp.view.utils.NotifReceiver
-import com.dteti.bookapp.view.utils.sendNotification
-import com.dteti.bookapp.viewmodel.*
+import com.dteti.bookapp.viewmodel.BookDetailViewModel
+import com.dteti.bookapp.viewmodel.BookDetailViewModelFactory
+import com.dteti.bookapp.viewmodel.QuoteViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
     // fragmentManager initiation
@@ -39,11 +41,8 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     //data binding and view models
     private lateinit var binding : ActivityBookDetailBinding
-    private lateinit var bookDetailViewModel : BookDetailViewModel
+    private val bookDetailViewModel : BookDetailViewModel by viewModel()
     private lateinit var quoteViewModel : QuoteViewModel
-
-    //try notification
-    private lateinit var prefs : SharedPreferences
 
     // book data
     private var book: Book? = null
@@ -72,7 +71,6 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         // assigns view models
         quoteViewModel = ViewModelProviders.of(this).get(QuoteViewModel::class.java)
         val bookDetailViewModelFactory = BookDetailViewModelFactory(application)
-        bookDetailViewModel = ViewModelProvider(this, bookDetailViewModelFactory).get(BookDetailViewModel::class.java)
 
         // get Quote
         quoteViewModel.getQuotes(this)
@@ -219,8 +217,8 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
         val pendingIntent = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val delay =  24 * 60 * 60 * 1000L
-//        val delaytest : Long = 2000
-        val futureInMillis = SystemClock.elapsedRealtime() + delay
+        val delaytest : Long = 2000
+        val futureInMillis = SystemClock.elapsedRealtime() + delaytest
         val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent)
     }

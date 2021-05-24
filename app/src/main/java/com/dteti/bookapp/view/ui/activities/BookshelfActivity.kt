@@ -21,13 +21,15 @@ import com.dteti.bookapp.viewmodel.BookshelfViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.viewmodel.compat.ScopeCompat.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class BookshelfActivity : AppCompatActivity() {
     // data binding
     private lateinit var binding: ActivityBookshelfBinding
 
     // view model
-    private lateinit var bookshelfViewModel: BookshelfViewModel
+    private val bookshelfViewModel: BookshelfViewModel by viewModel()
 
     // attribute
     private var bookRoom = MutableLiveData<List<BookRoom>>()
@@ -41,7 +43,7 @@ class BookshelfActivity : AppCompatActivity() {
 
         // assign view model
         val bookshelfViewModelFactory = BookshelfViewModelFactory(application)
-        bookshelfViewModel = ViewModelProvider(this, bookshelfViewModelFactory).get(BookshelfViewModel::class.java)
+//        bookshelfViewModel = ViewModelProvider(this, bookshelfViewModelFactory).get(BookshelfViewModel::class.java)
 
         // assign recyclerview adapter
         binding.rvBookshelf.setHasFixedSize(true)

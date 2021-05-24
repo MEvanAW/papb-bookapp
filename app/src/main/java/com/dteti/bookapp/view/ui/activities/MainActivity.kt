@@ -14,6 +14,7 @@ import com.dteti.bookapp.R
 import com.dteti.bookapp.viewmodel.QuoteViewModel
 import com.dteti.bookapp.databinding.ActivityMainBinding
 import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     // fragmentManager initiation
@@ -22,7 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     //data Binding and View Model
     private lateinit var b : ActivityMainBinding
-    private lateinit var quoteViewModel: QuoteViewModel
+
+    //get instance of View Model with Koin
+    private val quoteViewModel: QuoteViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +41,6 @@ class MainActivity : AppCompatActivity() {
             transaction.add(R.id.fr_rv_4, BookTopicFragment.newInstance("Business OR Money","Business and Money", null))
             transaction.commit()
         }
-
-        // get view model
-        quoteViewModel = ViewModelProviders.of(this).get(QuoteViewModel::class.java)
 
         quoteViewModel.getQuotes(this)
 
