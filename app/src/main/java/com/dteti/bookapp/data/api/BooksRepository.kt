@@ -1,14 +1,17 @@
 package com.dteti.bookapp.data.api
 
 import androidx.lifecycle.MutableLiveData
+import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BooksApiResponse
+import com.dteti.bookapp.di.Dependencies
+import org.koin.java.KoinJavaComponent.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class BooksRepository {
-    var client = BookClient.instance
+    private val client = Dependencies().bookCl
 
     // Query ke Google Books API untuk meminta daftar buku berdasar topik/subjek
     fun getBooksByTopic(topic: String): MutableLiveData<MutableList<Book>> {
@@ -59,3 +62,4 @@ class BooksRepository {
         return bookListLiveData
     }
 }
+

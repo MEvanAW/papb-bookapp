@@ -9,13 +9,14 @@ import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BookRoom
 import com.dteti.bookapp.data.model.BookStatus
+import com.dteti.bookapp.di.Dependencies
 import com.dteti.bookapp.view.utils.sendNotification
 import kotlinx.coroutines.launch
 
 class BookDetailViewModel(val app: Application): AndroidViewModel(app) {
 
     //initiate room database
-    private val db = AppDatabase.getInstance(app)
+    private val db = Dependencies().appDatabase
     private val bookDao = db.bookDao()
 
     //notification manager

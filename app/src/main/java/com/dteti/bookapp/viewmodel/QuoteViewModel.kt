@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.api.QuoteClient
 import com.dteti.bookapp.data.model.QuotesJSON
+import com.dteti.bookapp.di.Dependencies
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,7 +25,8 @@ class QuoteViewModel : ViewModel() {
     }
 
     fun getQuotes(act : Activity) {
-        QuoteClient.instance.getApi().enqueue(
+        val quoteClient = Dependencies().quoteCl
+        quoteClient.getApi().enqueue(
             object : Callback<QuotesJSON> {
                 override fun onResponse(
                     call: Call<QuotesJSON>,
