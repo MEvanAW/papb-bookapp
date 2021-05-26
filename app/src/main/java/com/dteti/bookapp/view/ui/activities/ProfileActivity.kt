@@ -69,6 +69,13 @@ class ProfileActivity : AppCompatActivity() {
         })
 
         // on click listeners
+        adapter.callableOnClick(object: BookAdapter.IOnBookClicked{
+            override fun onBookClicked(book: Book){
+                val intent = Intent(applicationContext, BookDetailActivity::class.java)
+                intent.putExtra("BOOK_DATA", book)
+                startActivity(intent)
+            }
+        })
         val favNav = findViewById<ImageView>(R.id.ivFav)
         val notifNav = findViewById<ImageView>(R.id.ivNotif)
         val homeNav = findViewById<ImageView>(R.id.ivHome)
