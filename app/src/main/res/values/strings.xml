@@ -14,6 +14,7 @@
     <string name="channelNameReminder">Reminder</string>
     <string name="uh_oh">Uh oh!</string>
     <string name="book_detail">Book Detail</string>
-    <string name="book_cover">Book Cover</string>
     <string name="start_reading">Start Reading</string>
+    <string name="book_cover">Book Cover</string>
+    <string name="author">Author</string>
 </resources>
