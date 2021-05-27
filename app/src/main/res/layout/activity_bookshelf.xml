@@ -6,8 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        >
+        android:scrollbars="vertical">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,16 +36,28 @@
 
                 <SearchView
                     android:id="@+id/searchBook"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="30sp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="18dp"
                     android:background="@drawable/search_background"
                     android:queryHint="Search Book"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/iv_filter"
                     app:layout_constraintTop_toBottomOf="@+id/tv_bookshelf" />
+
+                <ImageView
+                    android:id="@+id/iv_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginRight="30dp"
+                    android:src="@drawable/ic_filter"
+                    app:layout_constraintTop_toTopOf="@id/searchBook"
+                    app:layout_constraintBottom_toBottomOf="@id/searchBook"
+                    app:layout_constraintLeft_toRightOf="@id/searchBook"
+                    app:layout_constraintRight_toRightOf="parent"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_bookshelf"

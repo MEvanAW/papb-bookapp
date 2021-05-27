@@ -3,7 +3,11 @@ package com.dteti.bookapp.view.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.annotation.MenuRes
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -95,6 +99,9 @@ class BookshelfActivity : AppCompatActivity() {
                 }
             }
         })
+        binding.ivFilter.setOnClickListener{ v: View ->
+            showMenu(v)
+        }
         binding.ivNotif.setOnClickListener {
             toastNotYet()
         }
@@ -106,6 +113,13 @@ class BookshelfActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun showMenu(v: View){
+        val popup = PopupMenu(this, v)
+        popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
+        // Show the popup menu
+        popup.show()
     }
 
     private fun toastNotYet() {
