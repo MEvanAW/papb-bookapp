@@ -8,7 +8,7 @@ interface BookDao {
     @Query("SELECT * FROM book")
     suspend fun getAll(): List<BookRoom>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg books: BookRoom)
 
     @Query("DELETE FROM book WHERE title = :title")
