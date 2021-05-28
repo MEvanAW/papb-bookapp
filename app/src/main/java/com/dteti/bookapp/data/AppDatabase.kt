@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.dteti.bookapp.data.model.BookRoom
 
-@Database(entities = [BookRoom::class], version = 1)
+@Database(entities = [BookRoom::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun bookDao(): BookDao

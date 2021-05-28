@@ -18,9 +18,11 @@ class BookAdapter(internal var bookList: MutableList<Book>, private val act : Ac
         val title: TextView = itemView.findViewById(R.id.tvTitle)
         val author: TextView = itemView.findViewById(R.id.tvAuthor)
         val image: ImageView = itemView.findViewById(R.id.ivBookTrue)
+        val readLaterIcon: ImageView = itemView.findViewById(R.id.ivReadLater)
 
         fun bind(book: Book) {
-            itemView.setOnClickListener { onClicked?.onBookClicked(book) }
+            image.setOnClickListener { onClicked?.onBookClicked(book) }
+            readLaterIcon.setOnClickListener{ onClicked?.onReadLater(book) }
         }
     }
 
@@ -28,6 +30,7 @@ class BookAdapter(internal var bookList: MutableList<Book>, private val act : Ac
 
     interface  IOnBookClicked {
         fun onBookClicked(book: Book)
+        fun onReadLater(book: Book)
     }
 
     fun callableOnClick(onBookClicked: IOnBookClicked) {

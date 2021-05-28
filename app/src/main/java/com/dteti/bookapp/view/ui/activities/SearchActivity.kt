@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
@@ -42,6 +43,13 @@ class SearchActivity : AppCompatActivity() {
                 val intent = Intent(this@SearchActivity, BookDetailActivity::class.java)
                 intent.putExtra("BOOK_DATA", book)
                 startActivity(intent)
+            }
+            override fun onReadLater(book: Book) {
+                searchViewModel.insertBookAsToRead(book)
+                Toast.makeText(
+                    applicationContext,
+                    book.title + " is added to be read later.",
+                    Toast.LENGTH_LONG).show()
             }
         })
         rv_search.adapter = bookAdapter

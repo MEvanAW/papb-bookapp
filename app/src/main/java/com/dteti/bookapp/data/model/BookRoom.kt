@@ -2,9 +2,10 @@ package com.dteti.bookapp.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "book")
+@Entity(tableName = "book", indices = [Index(value = ["title"], unique = true)])
 data class BookRoom(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
     val title : String = "No Title",
