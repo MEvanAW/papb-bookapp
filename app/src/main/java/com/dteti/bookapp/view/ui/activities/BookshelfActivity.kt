@@ -6,26 +6,20 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.dteti.bookapp.R
-import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BookRoom
+import com.dteti.bookapp.data.model.BookStatus
 import com.dteti.bookapp.data.model.ImageLinks
 import com.dteti.bookapp.databinding.ActivityBookshelfBinding
 import com.dteti.bookapp.view.adapter.BookshelfAdapter
 import com.dteti.bookapp.viewmodel.BookshelfViewModel
-import com.dteti.bookapp.viewmodel.BookshelfViewModelFactory
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.viewmodel.compat.ScopeCompat.viewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BookshelfActivity : AppCompatActivity() {
@@ -37,6 +31,8 @@ class BookshelfActivity : AppCompatActivity() {
 
     // attribute
     private var bookRoom = MutableLiveData<List<BookRoom>>()
+    private val adapter = BookshelfAdapter(mutableListOf(), this)
+    private var selectedFilter = 0  // 0: all, 1: reading now, 2: to read, 3: have read
 
     // custom tab
     // TODO: declare custom tab variables
@@ -45,42 +41,11 @@ class BookshelfActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bookshelf)
 
-        // assign view model
-        val bookshelfViewModelFactory = BookshelfViewModelFactory(application)
-//        bookshelfViewModel = ViewModelProvider(this, bookshelfViewModelFactory).get(BookshelfViewModel::class.java)
-
         // assign recyclerview adapter
         binding.rvBookshelf.setHasFixedSize(true)
-        val adapter = BookshelfAdapter(mutableListOf(), this)
         binding.rvBookshelf.adapter = adapter
 
-        // get bookshelf
-        bookRoom = bookshelfViewModel.getAllBook()
-        bookRoom.observe({ lifecycle }, { bookRooms ->
-            run {
-                val bookshelf: MutableList<Book> = mutableListOf()
-                bookRooms.forEach{ bookRoom -> bookshelf.add(Book(
-                    bookRoom.title,
-                    bookRoom.authors,
-                    bookRoom.description,
-                    bookRoom.pageCount,
-                    bookRoom.categories,
-                    bookRoom.averageRating,
-                    ImageLinks(
-                        bookRoom.smallThumbnail,
-                        bookRoom.thumbnail,
-                        bookRoom.small,
-                        bookRoom.medium,
-                        bookRoom.large,
-                        bookRoom.extraLarge
-                    ),
-                    bookRoom.previewLink,
-                    bookRoom.bookStatus
-                ))}
-                adapter.bookshelf = bookshelf
-                binding.rvBookshelf.adapter!!.notifyDataSetChanged()
-            }
-        })
+        showAllBooks()
 
         //onClickListener
         adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
@@ -95,7 +60,6 @@ class BookshelfActivity : AppCompatActivity() {
             override fun onDeleteClicked(book: Book) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     bookshelfViewModel.deleteBook(book)
-                    bookshelfViewModel.getAllBook()
                 }
             }
         })
@@ -118,11 +82,83 @@ class BookshelfActivity : AppCompatActivity() {
     private fun showMenu(v: View){
         val popup = PopupMenu(this, v)
         popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
+        popup.menu.getItem(selectedFilter).isChecked = true
         // Show the popup menu
         popup.show()
     }
 
-    private fun toastNotYet() {
+    fun onFilterItemClick(item: MenuItem){
+        when(item.itemId){
+            R.id.option_all -> {
+                if (selectedFilter != 0){
+                    selectedFilter = 0
+                    showAllBooks()
+                }
+            }
+            R.id.option_reading_now -> {
+                if (selectedFilter != 1){
+                    selectedFilter = 1
+                    showBooksByStatus(BookStatus.READING_NOW)
+                }
+            }
+            R.id.option_to_read -> {
+                if (selectedFilter != 2){
+                    selectedFilter = 2
+                    showBooksByStatus(BookStatus.TO_READ)
+                }
+            }
+            R.id.option_have_read -> {
+                toastNotYet()
+            }
+        }
+    }
+
+    private fun showAllBooks(){
+        bookRoom = bookshelfViewModel.getAllBooks()
+        bookRoom.observe({ lifecycle }, { bookRooms ->
+            run {
+                val bookshelf = bookRoomListToBookMutableList(bookRooms)
+                adapter.bookshelf = bookshelf
+                binding.rvBookshelf.adapter!!.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun showBooksByStatus(bookStatus: BookStatus){
+        bookRoom = bookshelfViewModel.getBooksByStatus(bookStatus)
+        bookRoom.observe({ lifecycle }, { bookRooms ->
+            run {
+                val bookshelf = bookRoomListToBookMutableList(bookRooms)
+                adapter.bookshelf = bookshelf
+                binding.rvBookshelf.adapter!!.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun bookRoomListToBookMutableList(bookRooms: List<BookRoom>): MutableList<Book>{
+        val bookshelf: MutableList<Book> = mutableListOf()
+        bookRooms.forEach{ bookRoom -> bookshelf.add(Book(
+            bookRoom.title,
+            bookRoom.authors,
+            bookRoom.description,
+            bookRoom.pageCount,
+            bookRoom.categories,
+            bookRoom.averageRating,
+            ImageLinks(
+                bookRoom.smallThumbnail,
+                bookRoom.thumbnail,
+                bookRoom.small,
+                bookRoom.medium,
+                bookRoom.large,
+                bookRoom.extraLarge
+            ),
+            bookRoom.previewLink,
+            bookRoom.bookStatus
+        ))}
+        return bookshelf
+    }
+
+    private fun toastNotYet(){
         Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
     }
 }
