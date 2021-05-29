@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BookRoom
+import com.dteti.bookapp.data.model.BookStatus
 import com.dteti.bookapp.data.model.ImageLinks
 import com.dteti.bookapp.databinding.ActivityBookshelfBinding
 import com.dteti.bookapp.view.adapter.BookshelfAdapter
@@ -44,7 +45,7 @@ class BookshelfActivity : AppCompatActivity() {
         binding.rvBookshelf.setHasFixedSize(true)
         binding.rvBookshelf.adapter = adapter
 
-        getAllBooks()
+        showAllBooks()
 
         //onClickListener
         adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
@@ -91,19 +92,19 @@ class BookshelfActivity : AppCompatActivity() {
             R.id.option_all -> {
                 if (selectedFilter != 0){
                     selectedFilter = 0
-                    getAllBooks()
+                    showAllBooks()
                 }
             }
             R.id.option_reading_now -> {
                 if (selectedFilter != 1){
                     selectedFilter = 1
-                    getReadingNowBooks()
+                    showBooksByStatus(BookStatus.READING_NOW)
                 }
             }
             R.id.option_to_read -> {
                 if (selectedFilter != 2){
                     selectedFilter = 2
-                    getToReadBooks()
+                    showBooksByStatus(BookStatus.TO_READ)
                 }
             }
             R.id.option_have_read -> {
@@ -112,41 +113,49 @@ class BookshelfActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAllBooks(){
-        bookRoom = bookshelfViewModel.getAllBook()
+    private fun showAllBooks(){
+        bookRoom = bookshelfViewModel.getAllBooks()
         bookRoom.observe({ lifecycle }, { bookRooms ->
             run {
-                val bookshelf: MutableList<Book> = mutableListOf()
-                bookRooms.forEach{ bookRoom -> bookshelf.add(Book(
-                    bookRoom.title,
-                    bookRoom.authors,
-                    bookRoom.description,
-                    bookRoom.pageCount,
-                    bookRoom.categories,
-                    bookRoom.averageRating,
-                    ImageLinks(
-                        bookRoom.smallThumbnail,
-                        bookRoom.thumbnail,
-                        bookRoom.small,
-                        bookRoom.medium,
-                        bookRoom.large,
-                        bookRoom.extraLarge
-                    ),
-                    bookRoom.previewLink,
-                    bookRoom.bookStatus
-                ))}
+                val bookshelf = bookRoomListToBookMutableList(bookRooms)
                 adapter.bookshelf = bookshelf
                 binding.rvBookshelf.adapter!!.notifyDataSetChanged()
             }
         })
     }
 
-    private fun getReadingNowBooks(){
-
+    private fun showBooksByStatus(bookStatus: BookStatus){
+        bookRoom = bookshelfViewModel.getBooksByStatus(bookStatus)
+        bookRoom.observe({ lifecycle }, { bookRooms ->
+            run {
+                val bookshelf = bookRoomListToBookMutableList(bookRooms)
+                adapter.bookshelf = bookshelf
+                binding.rvBookshelf.adapter!!.notifyDataSetChanged()
+            }
+        })
     }
 
-    private fun getToReadBooks(){
-
+    private fun bookRoomListToBookMutableList(bookRooms: List<BookRoom>): MutableList<Book>{
+        val bookshelf: MutableList<Book> = mutableListOf()
+        bookRooms.forEach{ bookRoom -> bookshelf.add(Book(
+            bookRoom.title,
+            bookRoom.authors,
+            bookRoom.description,
+            bookRoom.pageCount,
+            bookRoom.categories,
+            bookRoom.averageRating,
+            ImageLinks(
+                bookRoom.smallThumbnail,
+                bookRoom.thumbnail,
+                bookRoom.small,
+                bookRoom.medium,
+                bookRoom.large,
+                bookRoom.extraLarge
+            ),
+            bookRoom.previewLink,
+            bookRoom.bookStatus
+        ))}
+        return bookshelf
     }
 
     private fun toastNotYet(){

@@ -5,8 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.dteti.bookapp.data.AppDatabase
+import com.dteti.bookapp.data.Converters
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BookRoom
+import com.dteti.bookapp.data.model.BookStatus
 import com.dteti.bookapp.di.Dependencies
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,9 +20,16 @@ class BookshelfViewModel(application: Application) : AndroidViewModel(applicatio
     private val bookDao = db.bookDao()
     private var bookListLiveData = MutableLiveData<List<BookRoom>>()
 
-    fun getAllBook(): MutableLiveData<List<BookRoom>>{
+    fun getAllBooks(): MutableLiveData<List<BookRoom>>{
         viewModelScope.launch{
             bookListLiveData.value = bookDao.getAll()
+        }
+        return bookListLiveData
+    }
+
+    fun getBooksByStatus(bookStatus: BookStatus): MutableLiveData<List<BookRoom>>{
+        viewModelScope.launch{
+            bookListLiveData.value = bookDao.getByStatus(bookStatus.ordinal)
         }
         return bookListLiveData
     }
