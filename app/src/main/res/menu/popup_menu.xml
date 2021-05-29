@@ -3,15 +3,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/option_all"
-            android:title="@string/all"/>
+            android:title="@string/all"
+            android:onClick="onFilterItemClick"/>
         <item
             android:id="@+id/option_reading_now"
-            android:title="@string/reading_now"/>
+            android:title="@string/reading_now"
+            android:onClick="onFilterItemClick"/>
         <item
             android:id="@+id/option_to_read"
-            android:title="@string/to_read"/>
+            android:title="@string/to_read"
+            android:onClick="onFilterItemClick"/>
         <item
             android:id="@+id/option_have_read"
-            android:title="@string/have_read"/>
+            android:title="@string/have_read"
+            android:onClick="onFilterItemClick"/>
     </group>
 </menu>

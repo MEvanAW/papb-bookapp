@@ -6,26 +6,19 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.MenuRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.dteti.bookapp.R
-import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.model.Book
 import com.dteti.bookapp.data.model.BookRoom
 import com.dteti.bookapp.data.model.ImageLinks
 import com.dteti.bookapp.databinding.ActivityBookshelfBinding
 import com.dteti.bookapp.view.adapter.BookshelfAdapter
 import com.dteti.bookapp.viewmodel.BookshelfViewModel
-import com.dteti.bookapp.viewmodel.BookshelfViewModelFactory
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.viewmodel.compat.ScopeCompat.viewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class BookshelfActivity : AppCompatActivity() {
@@ -37,6 +30,8 @@ class BookshelfActivity : AppCompatActivity() {
 
     // attribute
     private var bookRoom = MutableLiveData<List<BookRoom>>()
+    private val adapter = BookshelfAdapter(mutableListOf(), this)
+    private var selectedFilter = 0  // 0: all, 1: reading now, 2: to read, 3: have read
 
     // custom tab
     // TODO: declare custom tab variables
@@ -45,16 +40,79 @@ class BookshelfActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bookshelf)
 
-        // assign view model
-        val bookshelfViewModelFactory = BookshelfViewModelFactory(application)
-//        bookshelfViewModel = ViewModelProvider(this, bookshelfViewModelFactory).get(BookshelfViewModel::class.java)
-
         // assign recyclerview adapter
         binding.rvBookshelf.setHasFixedSize(true)
-        val adapter = BookshelfAdapter(mutableListOf(), this)
         binding.rvBookshelf.adapter = adapter
 
-        // get bookshelf
+        getAllBooks()
+
+        //onClickListener
+        adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
+            //when Continue Reading button in BookShelf Clicked
+            override fun onItemClicked(book: Book) {
+                val intent = Intent(this@BookshelfActivity, BookDetailActivity::class.java)
+                intent.putExtra("BOOK_DATA", book)
+                startActivity(intent)
+            }
+
+            //when delete button in BookShelf Clicked
+            override fun onDeleteClicked(book: Book) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    bookshelfViewModel.deleteBook(book)
+                }
+            }
+        })
+        binding.ivFilter.setOnClickListener{ v: View ->
+            showMenu(v)
+        }
+        binding.ivNotif.setOnClickListener {
+            toastNotYet()
+        }
+        binding.ivProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+        binding.ivHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun showMenu(v: View){
+        val popup = PopupMenu(this, v)
+        popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
+        popup.menu.getItem(selectedFilter).isChecked = true
+        // Show the popup menu
+        popup.show()
+    }
+
+    fun onFilterItemClick(item: MenuItem){
+        when(item.itemId){
+            R.id.option_all -> {
+                if (selectedFilter != 0){
+                    selectedFilter = 0
+                    getAllBooks()
+                }
+            }
+            R.id.option_reading_now -> {
+                if (selectedFilter != 1){
+                    selectedFilter = 1
+                    getReadingNowBooks()
+                }
+            }
+            R.id.option_to_read -> {
+                if (selectedFilter != 2){
+                    selectedFilter = 2
+                    getToReadBooks()
+                }
+            }
+            R.id.option_have_read -> {
+                toastNotYet()
+            }
+        }
+    }
+
+    private fun getAllBooks(){
         bookRoom = bookshelfViewModel.getAllBook()
         bookRoom.observe({ lifecycle }, { bookRooms ->
             run {
@@ -81,48 +139,17 @@ class BookshelfActivity : AppCompatActivity() {
                 binding.rvBookshelf.adapter!!.notifyDataSetChanged()
             }
         })
-
-        //onClickListener
-        adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
-            //when Continue Reading button in BookShelf Clicked
-            override fun onItemClicked(book: Book) {
-                val intent = Intent(this@BookshelfActivity, BookDetailActivity::class.java)
-                intent.putExtra("BOOK_DATA", book)
-                startActivity(intent)
-            }
-
-            //when delete button in BookShelf Clicked
-            override fun onDeleteClicked(book: Book) {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    bookshelfViewModel.deleteBook(book)
-                    bookshelfViewModel.getAllBook()
-                }
-            }
-        })
-        binding.ivFilter.setOnClickListener{ v: View ->
-            showMenu(v)
-        }
-        binding.ivNotif.setOnClickListener {
-            toastNotYet()
-        }
-        binding.ivProfile.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
-        }
-        binding.ivHome.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
     }
 
-    private fun showMenu(v: View){
-        val popup = PopupMenu(this, v)
-        popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
-        // Show the popup menu
-        popup.show()
+    private fun getReadingNowBooks(){
+
     }
 
-    private fun toastNotYet() {
+    private fun getToReadBooks(){
+
+    }
+
+    private fun toastNotYet(){
         Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
     }
 }
