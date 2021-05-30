@@ -30,7 +30,6 @@ import com.dteti.bookapp.databinding.ActivityBookDetailBinding
 import com.dteti.bookapp.view.ui.fragments.BookTopicFragment
 import com.dteti.bookapp.view.utils.NotifReceiver
 import com.dteti.bookapp.viewmodel.BookDetailViewModel
-import com.dteti.bookapp.viewmodel.BookDetailViewModelFactory
 import com.dteti.bookapp.viewmodel.QuoteViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -70,7 +69,6 @@ class BookDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         // assigns view models
         quoteViewModel = ViewModelProviders.of(this).get(QuoteViewModel::class.java)
-        val bookDetailViewModelFactory = BookDetailViewModelFactory(application)
 
         // get Quote
         quoteViewModel.getQuotes(this)
