@@ -37,7 +37,7 @@ class ProfileActivity : AppCompatActivity() {
 
         // assign recyclew view adapter
         val rvProfileBooks = findViewById<RecyclerView>(R.id.rv_profile_books)
-        val adapter = BookAdapter(mutableListOf(), this)
+        val adapter = BookAdapter(mutableListOf(), this, true)
         rvProfileBooks.adapter = adapter
 
         // get profile books
@@ -75,6 +75,7 @@ class ProfileActivity : AppCompatActivity() {
                 intent.putExtra("BOOK_DATA", book)
                 startActivity(intent)
             }
+            override fun onReadLater(book: Book) { }
         })
         val favNav = findViewById<ImageView>(R.id.ivFav)
         val notifNav = findViewById<ImageView>(R.id.ivNotif)
@@ -84,9 +85,10 @@ class ProfileActivity : AppCompatActivity() {
         val tvToRead = findViewById<TextView>(R.id.tv_to_read)
 
         tvHaveRead.setOnClickListener{
-            tvHaveRead.setTextColor(-903330)
-            tvReadingNow.setTextColor(-3881788)
-            tvToRead.setTextColor(-3881788)
+            //tvHaveRead.setTextColor(-903330)
+            //tvReadingNow.setTextColor(-3881788)
+            //tvToRead.setTextColor(-3881788)
+            toastNotYet()
         }
         tvReadingNow.setOnClickListener{
             tvHaveRead.setTextColor(-3881788)

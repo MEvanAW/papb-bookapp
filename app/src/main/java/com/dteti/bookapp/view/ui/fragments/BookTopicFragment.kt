@@ -55,7 +55,7 @@ class BookTopicFragment : Fragment() {
         binding.tvBookTopic.text = tvText
         binding.rvBookTopic.setHasFixedSize(true)
         bookTopicViewModel = BookTopicViewModel()
-        bookAdapter = BookAdapter(mutableListOf(), requireActivity())
+        bookAdapter = BookAdapter(mutableListOf(), requireActivity(), false)
         bookTopicViewModel.getBooksByTopic(topic!!).observe({ lifecycle }, { bookList ->
             run {
                 bookAdapter.bookList = bookList

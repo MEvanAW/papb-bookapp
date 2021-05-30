@@ -37,7 +37,7 @@ class SearchActivity : AppCompatActivity() {
         tv_uhoh_description.text = "We couldn’t find any results for $query.\nTry searching something else!"
 
         // set and assign recyclerView adapter
-        bookAdapter = BookAdapter(mutableListOf(), this)
+        bookAdapter = BookAdapter(mutableListOf(), this, false)
         bookAdapter.callableOnClick(object: BookAdapter.IOnBookClicked{
             override fun onBookClicked(book: Book){
                 val intent = Intent(this@SearchActivity, BookDetailActivity::class.java)

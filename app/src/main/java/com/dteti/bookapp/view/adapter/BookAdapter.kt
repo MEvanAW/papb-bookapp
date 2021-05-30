@@ -1,6 +1,7 @@
 package com.dteti.bookapp.view.adapter
 
 import android.app.Activity
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
 
-class BookAdapter(internal var bookList: MutableList<Book>, private val act : Activity) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
+class BookAdapter(internal var bookList: MutableList<Book>, private val act : Activity, private val isProfile: Boolean) : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) :RecyclerView.ViewHolder(view) {
         // initiation of views inside custom_cardview
@@ -42,6 +43,8 @@ class BookAdapter(internal var bookList: MutableList<Book>, private val act : Ac
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (isProfile)
+            holder.readLaterIcon.visibility = View.GONE
         val book : Book = bookList[position]
         holder.title.text = book.title
         if (!book.authors.isNullOrEmpty())
@@ -60,7 +63,7 @@ class BookAdapter(internal var bookList: MutableList<Book>, private val act : Ac
 
     override fun getItemCount(): Int = bookList.size
 
-    fun glideLoad(url: String, holder: ViewHolder){
+    private fun glideLoad(url: String, holder: ViewHolder){
         try { Glide.with(act).load(url).into(holder.image) }
         catch (e: Exception) { e.printStackTrace() }
     }
