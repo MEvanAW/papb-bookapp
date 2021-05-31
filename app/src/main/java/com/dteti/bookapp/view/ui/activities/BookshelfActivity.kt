@@ -47,6 +47,8 @@ class BookshelfActivity : AppCompatActivity() {
 
         showAllBooks()
 
+        binding.searchBook.isIconifiedByDefault = false
+
         //onClickListener
         adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
             //when Continue Reading button in BookShelf Clicked
