@@ -8,7 +8,10 @@ class Converters {
     @TypeConverter
     fun listToJson(value: List<String>?) = Gson().toJson(value)
     @TypeConverter
-    fun jsonToList(value: String) = Gson().fromJson(value, Array<String>::class.java).toList()
+    fun jsonToList(value: String): List<String>{
+        val fromJson =  Gson().fromJson(value, Array<String>::class.java)
+        return fromJson?.toList() ?: listOf("Anonym")
+    }
     @TypeConverter
     fun ordinalToBookStatus(value: Int) = enumValues<BookStatus>()[value]
     @TypeConverter
