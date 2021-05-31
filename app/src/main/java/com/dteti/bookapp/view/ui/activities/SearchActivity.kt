@@ -33,9 +33,6 @@ class SearchActivity : AppCompatActivity() {
         // accepting EXTRA
         query = intent.getStringExtra("QUERY")
 
-        // set tv uhoh description text
-        tv_uhoh_description.text = "We couldn’t find any results for $query.\nTry searching something else!"
-
         // set and assign recyclerView adapter
         bookAdapter = BookAdapter(mutableListOf(), this, false)
         bookAdapter.callableOnClick(object: BookAdapter.IOnBookClicked{
@@ -58,7 +55,7 @@ class SearchActivity : AppCompatActivity() {
         // get books from Google Books API
         searchViewModel.getBooks(query!!).observe({ lifecycle }, { bookList ->
             run{
-                isBookFound(bookList)
+                isBookFound(query, bookList)
             }
         })
 
@@ -67,7 +64,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchViewModel.getBooks(query!!).observe({ lifecycle }, { bookList ->
                     run{
-                        isBookFound(bookList)
+                        isBookFound(query, bookList)
                     }
                 })
                 return false
@@ -83,8 +80,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     //check book availability
-    private fun isBookFound(bookList: MutableList<Book>) {
+    private fun isBookFound(query: String?, bookList: MutableList<Book>) {
         if(bookList.isNullOrEmpty()) {
+            tv_uhoh_description.text = "We couldn’t find any results for $query.\nTry searching something else!"
             ic_not_found.visibility = View.VISIBLE
             tv_uhoh.visibility = View.VISIBLE
             tv_uhoh_description.visibility = View.VISIBLE
