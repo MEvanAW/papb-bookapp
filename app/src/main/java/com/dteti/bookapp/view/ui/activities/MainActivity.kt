@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity() {
             b.quoteView.setBackgroundResource(quoteViewModel.background.value!!)
         })
 
+        b.searchBook.isIconifiedByDefault = false
+
         // set listeners
         b.quoteView.setOnClickListener {
             quoteViewModel.getQuotes(this)

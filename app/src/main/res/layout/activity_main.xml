@@ -6,7 +6,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         tools:context=".view.ui.activities.MainActivity"
         android:scrollbars="vertical">
 
@@ -49,7 +49,7 @@
                     android:id="@+id/tv2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="BookApp!"
+                    android:text="@string/peek_a_book"
                     android:textColor="#F2375E"
                     android:textSize="40sp"
                     android:textStyle="bold"

@@ -47,6 +47,8 @@ class BookshelfActivity : AppCompatActivity() {
 
         showAllBooks()
 
+        binding.searchBook.isIconifiedByDefault = false
+
         //onClickListener
         adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
             //when Continue Reading button in BookShelf Clicked
@@ -61,6 +63,8 @@ class BookshelfActivity : AppCompatActivity() {
                 lifecycleScope.launch(Dispatchers.IO) {
                     bookshelfViewModel.deleteBook(book)
                 }
+                adapter.bookshelf.remove(book)
+                adapter.notifyDataSetChanged()
             }
         })
         binding.ivFilter.setOnClickListener{ v: View ->
