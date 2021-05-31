@@ -61,6 +61,8 @@ class BookshelfActivity : AppCompatActivity() {
                 lifecycleScope.launch(Dispatchers.IO) {
                     bookshelfViewModel.deleteBook(book)
                 }
+                adapter.bookshelf.remove(book)
+                adapter.notifyDataSetChanged()
             }
         })
         binding.ivFilter.setOnClickListener{ v: View ->
