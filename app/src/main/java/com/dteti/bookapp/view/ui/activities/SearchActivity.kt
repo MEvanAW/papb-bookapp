@@ -59,6 +59,8 @@ class SearchActivity : AppCompatActivity() {
             }
         })
 
+        searchBook.isIconifiedByDefault = false
+
         // set listeners
         searchBook.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
