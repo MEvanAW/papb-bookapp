@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
@@ -67,11 +68,32 @@ class BookshelfActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
             }
         })
+        binding.searchBook.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null && query.isNotBlank()) {
+                    val searchResult = adapter.bookshelf.filter { b: Book -> b.title.contains(query, true) }
+                    if (!searchResult.isNullOrEmpty()) {
+                        adapter.bookshelf = searchResult.toMutableList()
+                        adapter.notifyDataSetChanged()
+                    }
+                    else when(selectedFilter){
+                        0 -> { toast("$query in All category not found.") }
+                        1 -> { toast("$query in Reading Now category not found")}
+                        2 -> { toast("$query in To Read category not found.") }
+                    }
+                }
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // TODO: consider text change processing
+                return false
+            }
+        })
         binding.ivFilter.setOnClickListener{ v: View ->
             showMenu(v)
         }
         binding.ivNotif.setOnClickListener {
-            toastNotYet()
+            toast("Not implemented yet.")
         }
         binding.ivProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
@@ -94,25 +116,19 @@ class BookshelfActivity : AppCompatActivity() {
     fun onFilterItemClick(item: MenuItem){
         when(item.itemId){
             R.id.option_all -> {
-                if (selectedFilter != 0){
-                    selectedFilter = 0
-                    showAllBooks()
-                }
+                selectedFilter = 0
+                showAllBooks()
             }
             R.id.option_reading_now -> {
-                if (selectedFilter != 1){
-                    selectedFilter = 1
-                    showBooksByStatus(BookStatus.READING_NOW)
-                }
+                selectedFilter = 1
+                showBooksByStatus(BookStatus.READING_NOW)
             }
             R.id.option_to_read -> {
-                if (selectedFilter != 2){
-                    selectedFilter = 2
-                    showBooksByStatus(BookStatus.TO_READ)
-                }
+                selectedFilter = 2
+                showBooksByStatus(BookStatus.TO_READ)
             }
             R.id.option_have_read -> {
-                toastNotYet()
+                toast("Not implemented yet.")
             }
         }
     }
@@ -162,7 +178,7 @@ class BookshelfActivity : AppCompatActivity() {
         return bookshelf
     }
 
-    private fun toastNotYet(){
-        Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
+    private fun toast(text: String){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 }
