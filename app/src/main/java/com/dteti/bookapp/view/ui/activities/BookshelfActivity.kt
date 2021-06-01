@@ -1,5 +1,6 @@
 package com.dteti.bookapp.view.ui.activities
 
+import android.content.ComponentName
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,11 @@ import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsServiceConnection
+import androidx.browser.customtabs.CustomTabsSession
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -36,7 +42,9 @@ class BookshelfActivity : AppCompatActivity() {
     private var selectedFilter = 0  // 0: all, 1: reading now, 2: to read, 3: have read
 
     // custom tab
-    // TODO: declare custom tab variables
+    private var mCustomTabsServiceConnection: CustomTabsServiceConnection? = null
+    private var mClient: CustomTabsClient? = null
+    private var mCustomTabsSession: CustomTabsSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,15 +57,45 @@ class BookshelfActivity : AppCompatActivity() {
         bookRoom.observe({ lifecycle }, { bookRooms ->
             run {
                 val bookshelf = bookRoomListToBookMutableList(bookRooms)
+                val otherLikelyBundles: MutableList<Bundle> = mutableListOf()
+                bookshelf.forEach { book ->
+                    val bundle = Bundle()
+                    bundle.putParcelable("KEY_URL", book.previewLink?.toUri())
+                    otherLikelyBundles.add(bundle)
+                }
+                // warm up the browser
+                mCustomTabsServiceConnection = object: CustomTabsServiceConnection(){
+                    override fun onCustomTabsServiceConnected(name: ComponentName, client: CustomTabsClient) {
+                        // pre-warming
+                        mClient = client
+                        mClient?.warmup(0L)
+                        mCustomTabsSession = mClient?.newSession(null)
+                        mCustomTabsSession!!.mayLaunchUrl(null,null,otherLikelyBundles)
+                    }
+                    override fun onServiceDisconnected(name: ComponentName?) {
+                        mClient = null
+                    }
+                }
+                if(mCustomTabsSession != null)
+                    CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", mCustomTabsServiceConnection!!)
+
                 // assign adapter
                 adapter = BookshelfAdapter(bookshelf, this)
                 binding.rvBookshelf.adapter = adapter
                 adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
                     // when Continue Reading button in Bookshelf Clicked
                     override fun onItemClicked(book: Book) {
-                        val intent = Intent(this@BookshelfActivity, BookDetailActivity::class.java)
-                        intent.putExtra("BOOK_DATA", book)
-                        startActivity(intent)
+                        if(!book.previewLink.isNullOrBlank()){
+                            var builder = CustomTabsIntent.Builder()
+                            if (mCustomTabsSession != null)
+                                builder = CustomTabsIntent.Builder(mCustomTabsSession)
+                            // builder.setActionButton(icon, description, pendingIntent, tint)
+                            val customTabsIntent = builder.build()
+                            customTabsIntent.intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            customTabsIntent.launchUrl(applicationContext, book.previewLink.toUri())
+                            toast("It is recommended to have Google Chrome as default browser " +
+                                "and use landscape orientation.")
+                        }
                     }
                     // when Delete button in Bookshelf Clicked
                     override fun onDeleteClicked(book: Book) {

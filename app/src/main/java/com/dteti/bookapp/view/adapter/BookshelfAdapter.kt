@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
+import com.dteti.bookapp.data.model.BookStatus
 
 class BookshelfAdapter(internal val bookshelf : MutableList<Book>, val act : Activity) : RecyclerView.Adapter<BookshelfAdapter.ViewHolder>() {
 
@@ -26,6 +27,8 @@ class BookshelfAdapter(internal val bookshelf : MutableList<Book>, val act : Act
         holder.title.text = book.title
         if (!book.authors.isNullOrEmpty())
             holder.author.text = book.authors[0]
+        if (book.bookStatus == BookStatus.TO_READ)
+            holder.continueRead.text = "Start reading"
         when {
             book.imageLinks == null -> holder.image.setImageResource(R.drawable.ic_book_cover_not_available)
             book.imageLinks.thumbnail != null -> glideLoad(book.imageLinks.thumbnail, holder)
