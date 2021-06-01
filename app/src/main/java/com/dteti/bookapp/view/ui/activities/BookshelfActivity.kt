@@ -1,12 +1,19 @@
 package com.dteti.bookapp.view.ui.activities
 
+import android.content.ComponentName
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsServiceConnection
+import androidx.browser.customtabs.CustomTabsSession
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -30,48 +37,113 @@ class BookshelfActivity : AppCompatActivity() {
     private val bookshelfViewModel: BookshelfViewModel by viewModel()
 
     // attribute
+    private lateinit var adapter: BookshelfAdapter
     private var bookRoom = MutableLiveData<List<BookRoom>>()
-    private val adapter = BookshelfAdapter(mutableListOf(), this)
     private var selectedFilter = 0  // 0: all, 1: reading now, 2: to read, 3: have read
 
     // custom tab
-    // TODO: declare custom tab variables
+    private var mCustomTabsServiceConnection: CustomTabsServiceConnection? = null
+    private var mClient: CustomTabsClient? = null
+    private var mCustomTabsSession: CustomTabsSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bookshelf)
 
-        // assign recyclerview adapter
         binding.rvBookshelf.setHasFixedSize(true)
-        binding.rvBookshelf.adapter = adapter
 
-        showAllBooks()
+        // get all books
+        bookRoom = bookshelfViewModel.getAllBooks()
+        bookRoom.observe({ lifecycle }, { bookRooms ->
+            run {
+                val bookshelf = bookRoomListToBookMutableList(bookRooms)
+                val otherLikelyBundles: MutableList<Bundle> = mutableListOf()
+                bookshelf.forEach { book ->
+                    val bundle = Bundle()
+                    bundle.putParcelable("KEY_URL", book.previewLink?.toUri())
+                    otherLikelyBundles.add(bundle)
+                }
+                // warm up the browser
+                mCustomTabsServiceConnection = object: CustomTabsServiceConnection(){
+                    override fun onCustomTabsServiceConnected(name: ComponentName, client: CustomTabsClient) {
+                        // pre-warming
+                        mClient = client
+                        mClient?.warmup(0L)
+                        mCustomTabsSession = mClient?.newSession(null)
+                        mCustomTabsSession!!.mayLaunchUrl(null,null,otherLikelyBundles)
+                    }
+                    override fun onServiceDisconnected(name: ComponentName?) {
+                        mClient = null
+                    }
+                }
+                if(mCustomTabsSession != null)
+                    CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", mCustomTabsServiceConnection!!)
+
+                // assign adapter
+                adapter = BookshelfAdapter(bookshelf, this)
+                binding.rvBookshelf.adapter = adapter
+                adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
+                    // when Continue Reading button in Bookshelf Clicked
+                    override fun onItemClicked(book: Book) {
+                        if(!book.previewLink.isNullOrBlank()){
+                            var builder = CustomTabsIntent.Builder()
+                            if (mCustomTabsSession != null)
+                                builder = CustomTabsIntent.Builder(mCustomTabsSession)
+                            // builder.setActionButton(icon, description, pendingIntent, tint)
+                            val customTabsIntent = builder.build()
+                            customTabsIntent.intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            customTabsIntent.launchUrl(applicationContext, book.previewLink.toUri())
+                            toast("It is recommended to have Google Chrome as default browser " +
+                                "and use landscape orientation.")
+                        }
+                    }
+                    // when Delete button in Bookshelf Clicked
+                    override fun onDeleteClicked(book: Book) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            bookshelfViewModel.deleteBook(book)
+                        }
+                        adapter.bookshelf.remove(book)
+                        adapter.filteredBooks.remove(book)
+                        adapter.notifyDataSetChanged()
+                    }
+                })
+            }
+        })
 
         binding.searchBook.isIconifiedByDefault = false
 
         //onClickListener
-        adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
-            //when Continue Reading button in BookShelf Clicked
-            override fun onItemClicked(book: Book) {
-                val intent = Intent(this@BookshelfActivity, BookDetailActivity::class.java)
-                intent.putExtra("BOOK_DATA", book)
-                startActivity(intent)
-            }
-
-            //when delete button in BookShelf Clicked
-            override fun onDeleteClicked(book: Book) {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    bookshelfViewModel.deleteBook(book)
+        binding.searchBook.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null && query.isNotBlank()) {
+                    val searchResult = adapter.bookshelf.filter { b: Book -> b.title.contains(query, true) }
+                    if (!searchResult.isNullOrEmpty()) {
+                        adapter.filteredBooks = searchResult.toMutableList()
+                        adapter.notifyDataSetChanged()
+                    }
+                    else when(selectedFilter){
+                        0 -> { toast("$query in All category not found.") }
+                        1 -> { toast("$query in Reading Now category not found")}
+                        2 -> { toast("$query in To Read category not found.") }
+                    }
                 }
-                adapter.bookshelf.remove(book)
-                adapter.notifyDataSetChanged()
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText.isNullOrBlank())
+                    when(selectedFilter){
+                        0 -> showAllBooks()
+                        1 -> showBooksByStatus(BookStatus.READING_NOW)
+                        2 -> showBooksByStatus(BookStatus.TO_READ)
+                    }
+                return false
             }
         })
         binding.ivFilter.setOnClickListener{ v: View ->
             showMenu(v)
         }
         binding.ivNotif.setOnClickListener {
-            toastNotYet()
+            toast("Not implemented yet.")
         }
         binding.ivProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
@@ -83,6 +155,7 @@ class BookshelfActivity : AppCompatActivity() {
         }
     }
 
+    // show filter popup menu
     private fun showMenu(v: View){
         val popup = PopupMenu(this, v)
         popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
@@ -112,31 +185,19 @@ class BookshelfActivity : AppCompatActivity() {
                 }
             }
             R.id.option_have_read -> {
-                toastNotYet()
+                toast("Not implemented yet.")
             }
         }
     }
 
     private fun showAllBooks(){
-        bookRoom = bookshelfViewModel.getAllBooks()
-        bookRoom.observe({ lifecycle }, { bookRooms ->
-            run {
-                val bookshelf = bookRoomListToBookMutableList(bookRooms)
-                adapter.bookshelf = bookshelf
-                binding.rvBookshelf.adapter!!.notifyDataSetChanged()
-            }
-        })
+        adapter.filteredBooks = adapter.bookshelf
+        adapter.notifyDataSetChanged()
     }
 
     private fun showBooksByStatus(bookStatus: BookStatus){
-        bookRoom = bookshelfViewModel.getBooksByStatus(bookStatus)
-        bookRoom.observe({ lifecycle }, { bookRooms ->
-            run {
-                val bookshelf = bookRoomListToBookMutableList(bookRooms)
-                adapter.bookshelf = bookshelf
-                binding.rvBookshelf.adapter!!.notifyDataSetChanged()
-            }
-        })
+        adapter.filteredBooks = adapter.bookshelf.filter{ b: Book -> b.bookStatus == bookStatus}.toMutableList()
+        adapter.notifyDataSetChanged()
     }
 
     private fun bookRoomListToBookMutableList(bookRooms: List<BookRoom>): MutableList<Book>{
@@ -162,7 +223,7 @@ class BookshelfActivity : AppCompatActivity() {
         return bookshelf
     }
 
-    private fun toastNotYet(){
-        Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
+    private fun toast(text: String){
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 }

@@ -21,10 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:contentDescription="Book Cover"
+            android:contentDescription="@string/book_cover"
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.cardview.widget.CardView>
 
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="120dp" />
+        app:layout_constraintGuide_begin="120dp"/>
 
     <TextView
         android:id="@+id/tvTitleShelf"
@@ -48,8 +48,7 @@
         android:singleLine="true"
         android:maxWidth="78dp"
         android:textFontWeight="500"
-        android:textColor="@color/black"
-        />
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/tvAuthorShelf"
@@ -62,21 +61,21 @@
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitleShelf"
-        android:layout_marginTop="10dp"
-        />
+        android:layout_marginTop="10dp"/>
 
     <Button
         android:id="@+id/bt_continueShelf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Continue reading"
+        android:text="@string/continue_reading"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
         android:background="@drawable/bg_button_magenta"
         android:paddingHorizontal="18dp"
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/tvAuthorShelf"
         android:layout_marginTop="18dp"
-        android:textAllCaps="false"
-        />
+        android:textAllCaps="false"/>
 
     <ImageButton
         android:id="@+id/bt_removeShelf"
@@ -87,6 +86,5 @@
         android:layout_margin="3dp"
         android:background="@drawable/bg_button_trash"
         android:src="@drawable/ic_trash_bin__pink_"
-        android:contentDescription="Remove from list">
-    </ImageButton>
+        android:contentDescription="@string/remove_from_list"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
