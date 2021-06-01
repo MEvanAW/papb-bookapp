@@ -13,14 +13,16 @@ import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
 import com.dteti.bookapp.data.model.Book
 
-class BookshelfAdapter(var bookshelf : MutableList<Book>, val act : Activity) : RecyclerView.Adapter<BookshelfAdapter.ViewHolder>() {
+class BookshelfAdapter(internal val bookshelf : MutableList<Book>, val act : Activity) : RecyclerView.Adapter<BookshelfAdapter.ViewHolder>() {
+
+    internal var filteredBooks = bookshelf
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookshelfAdapter.ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.cardview_bookshelf, parent, false))
     }
 
     override fun onBindViewHolder(holder: BookshelfAdapter.ViewHolder, position: Int) {
-        val book : Book = bookshelf[position]
+        val book : Book = filteredBooks[position]
         holder.title.text = book.title
         if (!book.authors.isNullOrEmpty())
             holder.author.text = book.authors[0]
@@ -37,7 +39,7 @@ class BookshelfAdapter(var bookshelf : MutableList<Book>, val act : Activity) : 
     }
 
     override fun getItemCount(): Int {
-        return bookshelf.size
+        return filteredBooks.size
     }
 
     inner class ViewHolder(view : View) : RecyclerView.ViewHolder(view) {

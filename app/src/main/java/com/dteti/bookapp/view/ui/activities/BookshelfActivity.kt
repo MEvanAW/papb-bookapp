@@ -31,8 +31,8 @@ class BookshelfActivity : AppCompatActivity() {
     private val bookshelfViewModel: BookshelfViewModel by viewModel()
 
     // attribute
+    private lateinit var adapter: BookshelfAdapter
     private var bookRoom = MutableLiveData<List<BookRoom>>()
-    private val adapter = BookshelfAdapter(mutableListOf(), this)
     private var selectedFilter = 0  // 0: all, 1: reading now, 2: to read, 3: have read
 
     // custom tab
@@ -42,38 +42,45 @@ class BookshelfActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_bookshelf)
 
-        // assign recyclerview adapter
         binding.rvBookshelf.setHasFixedSize(true)
-        binding.rvBookshelf.adapter = adapter
 
-        showAllBooks()
+        // get all books
+        bookRoom = bookshelfViewModel.getAllBooks()
+        bookRoom.observe({ lifecycle }, { bookRooms ->
+            run {
+                val bookshelf = bookRoomListToBookMutableList(bookRooms)
+                // assign adapter
+                adapter = BookshelfAdapter(bookshelf, this)
+                binding.rvBookshelf.adapter = adapter
+                adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
+                    // when Continue Reading button in Bookshelf Clicked
+                    override fun onItemClicked(book: Book) {
+                        val intent = Intent(this@BookshelfActivity, BookDetailActivity::class.java)
+                        intent.putExtra("BOOK_DATA", book)
+                        startActivity(intent)
+                    }
+                    // when Delete button in Bookshelf Clicked
+                    override fun onDeleteClicked(book: Book) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            bookshelfViewModel.deleteBook(book)
+                        }
+                        adapter.bookshelf.remove(book)
+                        adapter.filteredBooks.remove(book)
+                        adapter.notifyDataSetChanged()
+                    }
+                })
+            }
+        })
 
         binding.searchBook.isIconifiedByDefault = false
 
         //onClickListener
-        adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
-            //when Continue Reading button in BookShelf Clicked
-            override fun onItemClicked(book: Book) {
-                val intent = Intent(this@BookshelfActivity, BookDetailActivity::class.java)
-                intent.putExtra("BOOK_DATA", book)
-                startActivity(intent)
-            }
-
-            //when delete button in BookShelf Clicked
-            override fun onDeleteClicked(book: Book) {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    bookshelfViewModel.deleteBook(book)
-                }
-                adapter.bookshelf.remove(book)
-                adapter.notifyDataSetChanged()
-            }
-        })
         binding.searchBook.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null && query.isNotBlank()) {
                     val searchResult = adapter.bookshelf.filter { b: Book -> b.title.contains(query, true) }
                     if (!searchResult.isNullOrEmpty()) {
-                        adapter.bookshelf = searchResult.toMutableList()
+                        adapter.filteredBooks = searchResult.toMutableList()
                         adapter.notifyDataSetChanged()
                     }
                     else when(selectedFilter){
@@ -85,7 +92,12 @@ class BookshelfActivity : AppCompatActivity() {
                 return false
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                // TODO: consider text change processing
+                if (newText.isNullOrBlank())
+                    when(selectedFilter){
+                        0 -> showAllBooks()
+                        1 -> showBooksByStatus(BookStatus.READING_NOW)
+                        2 -> showBooksByStatus(BookStatus.TO_READ)
+                    }
                 return false
             }
         })
@@ -105,6 +117,7 @@ class BookshelfActivity : AppCompatActivity() {
         }
     }
 
+    // show filter popup menu
     private fun showMenu(v: View){
         val popup = PopupMenu(this, v)
         popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
@@ -116,16 +129,22 @@ class BookshelfActivity : AppCompatActivity() {
     fun onFilterItemClick(item: MenuItem){
         when(item.itemId){
             R.id.option_all -> {
-                selectedFilter = 0
-                showAllBooks()
+                if (selectedFilter != 0){
+                    selectedFilter = 0
+                    showAllBooks()
+                }
             }
             R.id.option_reading_now -> {
-                selectedFilter = 1
-                showBooksByStatus(BookStatus.READING_NOW)
+                if (selectedFilter != 1){
+                    selectedFilter = 1
+                    showBooksByStatus(BookStatus.READING_NOW)
+                }
             }
             R.id.option_to_read -> {
-                selectedFilter = 2
-                showBooksByStatus(BookStatus.TO_READ)
+                if (selectedFilter != 2){
+                    selectedFilter = 2
+                    showBooksByStatus(BookStatus.TO_READ)
+                }
             }
             R.id.option_have_read -> {
                 toast("Not implemented yet.")
@@ -134,25 +153,13 @@ class BookshelfActivity : AppCompatActivity() {
     }
 
     private fun showAllBooks(){
-        bookRoom = bookshelfViewModel.getAllBooks()
-        bookRoom.observe({ lifecycle }, { bookRooms ->
-            run {
-                val bookshelf = bookRoomListToBookMutableList(bookRooms)
-                adapter.bookshelf = bookshelf
-                binding.rvBookshelf.adapter!!.notifyDataSetChanged()
-            }
-        })
+        adapter.filteredBooks = adapter.bookshelf
+        adapter.notifyDataSetChanged()
     }
 
     private fun showBooksByStatus(bookStatus: BookStatus){
-        bookRoom = bookshelfViewModel.getBooksByStatus(bookStatus)
-        bookRoom.observe({ lifecycle }, { bookRooms ->
-            run {
-                val bookshelf = bookRoomListToBookMutableList(bookRooms)
-                adapter.bookshelf = bookshelf
-                binding.rvBookshelf.adapter!!.notifyDataSetChanged()
-            }
-        })
+        adapter.filteredBooks = adapter.bookshelf.filter{ b: Book -> b.bookStatus == bookStatus}.toMutableList()
+        adapter.notifyDataSetChanged()
     }
 
     private fun bookRoomListToBookMutableList(bookRooms: List<BookRoom>): MutableList<Book>{
