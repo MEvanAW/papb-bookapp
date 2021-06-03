@@ -38,11 +38,11 @@ Currently, this application has 2 types of [lifecycle](https://developer.android
 
 ## Screenshots
 
-Here are some screenshots taken from Bookapp.
+Here are some screenshots taken from <b>peek a book</b>.
 
 ### Home
 
-<img src="https://user-images.githubusercontent.com/50491841/119216848-4a8bc480-bb00-11eb-9e2f-9d897d25dbf1.jpg" width="270" height="480"> <img src="https://user-images.githubusercontent.com/50491841/119217279-5c229b80-bb03-11eb-8d25-21dac8f308f0.jpg" width="270" height="480">
+<img src="https://user-images.githubusercontent.com/50491841/120643621-98a9ac00-c4a0-11eb-9ad3-d0f63e95128c.jpg" width="270" height="566"> <img src="https://user-images.githubusercontent.com/50491841/120643944-f938e900-c4a0-11eb-87d1-4ef06765049a.jpg" width="270" height="566">
 
 
 ### Book Detail
@@ -61,9 +61,9 @@ It is recommended to have Google Chrome as default browser and use landscape ori
 
 ### My Bookshelf
 
-Contains books that the user has read before.
+Contains books that the user has read before or save to read for later.
 
-<img src="https://user-images.githubusercontent.com/50491841/119217053-da7e3e00-bb01-11eb-8a52-8064c0961f7b.jpg" width="270" height="480">
+<img src="https://user-images.githubusercontent.com/50491841/120644338-69e00580-c4a1-11eb-900d-fbfa40a8d8b8.jpg" width="270" height="566">
 
 ### User Profile
 
