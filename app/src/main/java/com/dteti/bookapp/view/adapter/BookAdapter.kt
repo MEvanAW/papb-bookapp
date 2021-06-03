@@ -27,8 +27,10 @@ class BookAdapter(internal var bookList: MutableList<Book>, private val act : Ac
         }
     }
 
+    //set onClick variable
     private var onClicked : IOnBookClicked? = null
 
+    //set interface
     interface  IOnBookClicked {
         fun onBookClicked(book: Book)
         fun onReadLater(book: Book)
@@ -63,6 +65,7 @@ class BookAdapter(internal var bookList: MutableList<Book>, private val act : Ac
 
     override fun getItemCount(): Int = bookList.size
 
+    //load image with glide
     private fun glideLoad(url: String, holder: ViewHolder){
         try { Glide.with(act).load(url).into(holder.image) }
         catch (e: Exception) { e.printStackTrace() }

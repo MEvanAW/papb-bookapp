@@ -42,8 +42,10 @@ class MainActivity : AppCompatActivity() {
             transaction.commit()
         }
 
+        //get quote from api services
         quoteViewModel.getQuotes(this)
 
+        //live data observer
         quoteViewModel.quotesGenerated.observe(this, Observer {
             b.tvQuotes.text = quoteViewModel.quotesGenerated.value
             b.quoteView.setBackgroundResource(quoteViewModel.background.value!!)
@@ -79,6 +81,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        //get quotes from api services after resuming
         quoteViewModel.getQuotes(this)
         super.onResume()
     }

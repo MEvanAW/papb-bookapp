@@ -15,7 +15,10 @@ import retrofit2.Response
 
 class QuoteViewModel : ViewModel() {
 
+    //background array for quote view
     private val backgroundArray = arrayListOf(R.drawable.ic_group_171, R.drawable.ic_group_172, R.drawable.ic_group_173, R.drawable.ic_group_174)
+
+    //setLiveData
     var quotesGenerated= MutableLiveData<String>()
     var background = MutableLiveData<Int>()
 

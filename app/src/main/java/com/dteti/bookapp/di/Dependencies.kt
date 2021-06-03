@@ -4,10 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.dteti.bookapp.data.AppDatabase
 import com.dteti.bookapp.data.api.*
-import com.dteti.bookapp.viewmodel.BookDetailViewModel
-import com.dteti.bookapp.viewmodel.BookshelfViewModel
-import com.dteti.bookapp.viewmodel.QuoteViewModel
-import com.dteti.bookapp.viewmodel.SearchViewModel
+import com.dteti.bookapp.viewmodel.*
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -36,6 +33,12 @@ val vmBookShelf = module {
 val vmSearch = module {
     viewModel {
         SearchViewModel()
+    }
+}
+
+val vmProfile = module {
+    viewModel {
+        ProfileViewModel(get())
     }
 }
 

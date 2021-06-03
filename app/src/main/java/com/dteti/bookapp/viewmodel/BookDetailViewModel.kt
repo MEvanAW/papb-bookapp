@@ -19,9 +19,6 @@ class BookDetailViewModel(val app: Application): AndroidViewModel(app) {
     private val db = Dependencies().appDatabase
     private val bookDao = db.bookDao()
 
-    //notification manager
-    var notificationManager = ContextCompat.getSystemService(app, NotificationManager::class.java) as NotificationManager
-
     fun insertBookAsReadingNow(book: Book){
         viewModelScope.launch{
             bookDao.insertAll(
@@ -43,9 +40,5 @@ class BookDetailViewModel(val app: Application): AndroidViewModel(app) {
                 )
             )
         }
-    }
-
-    fun pushNotification() {
-        notificationManager.sendNotification(app)
     }
 }
