@@ -83,7 +83,7 @@ class BookshelfActivity : AppCompatActivity() {
                 adapter = BookshelfAdapter(bookshelf, this)
                 binding.rvBookshelf.adapter = adapter
                 adapter.callableOnClick(object : BookshelfAdapter.OnItemClicked {
-                    // when Continue Reading button in Bookshelf Clicked
+                    // when Continue Reading button in Bookshelf is clicked
                     override fun onItemClicked(book: Book) {
                         if(!book.previewLink.isNullOrBlank()){
                             var builder = CustomTabsIntent.Builder()
@@ -97,7 +97,7 @@ class BookshelfActivity : AppCompatActivity() {
                                 "and use landscape orientation.")
                         }
                     }
-                    // when Delete button in Bookshelf Clicked
+                    // when Delete button in Bookshelf is clicked
                     override fun onDeleteClicked(book: Book) {
                         lifecycleScope.launch(Dispatchers.IO) {
                             bookshelfViewModel.deleteBook(book)
@@ -106,13 +106,19 @@ class BookshelfActivity : AppCompatActivity() {
                         adapter.filteredBooks.remove(book)
                         adapter.notifyDataSetChanged()
                     }
+
+                    override fun onCardClicked(book: Book) {
+                        val intent = Intent(applicationContext, BookDetailActivity::class.java)
+                        intent.putExtra("BOOK_DATA", book)
+                        startActivity(intent)
+                    }
                 })
             }
         })
 
         binding.searchBook.isIconifiedByDefault = false
 
-        //onClickListener
+        // onClickListener
         binding.searchBook.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null && query.isNotBlank()) {
@@ -160,7 +166,7 @@ class BookshelfActivity : AppCompatActivity() {
         val popup = PopupMenu(this, v)
         popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
         popup.menu.getItem(selectedFilter).isChecked = true
-        // Show the popup menu
+        // show the popup menu
         popup.show()
     }
 
