@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dteti.bookapp.R
@@ -46,15 +47,17 @@ class BookshelfAdapter(internal val bookshelf : MutableList<Book>, val act : Act
     }
 
     inner class ViewHolder(view : View) : RecyclerView.ViewHolder(view) {
-        var title = itemView.findViewById<TextView>(R.id.tvTitleShelf)
-        var author = itemView.findViewById<TextView>(R.id.tvAuthorShelf)
-        var image = itemView.findViewById<ImageView>(R.id.ivBookShelf)
-        var continueRead = itemView.findViewById<Button>(R.id.bt_continueShelf)
-        var delete = itemView.findViewById<ImageButton>(R.id.bt_removeShelf)
+        val title = itemView.findViewById<TextView>(R.id.tvTitleShelf)
+        val author = itemView.findViewById<TextView>(R.id.tvAuthorShelf)
+        val image = itemView.findViewById<ImageView>(R.id.ivBookShelf)
+        val continueRead = itemView.findViewById<Button>(R.id.bt_continueShelf)
+        val delete = itemView.findViewById<ImageButton>(R.id.bt_removeShelf)
+        val card = itemView.findViewById<ConstraintLayout>(R.id.clBookShelfCard)
 
         fun bind(book: Book) {
             continueRead.setOnClickListener { onClicked?.onItemClicked(book) }
             delete.setOnClickListener { onClicked?.onDeleteClicked(book) }
+            card.setOnClickListener { onClicked?.onCardClicked(book) }
         }
     }
 
@@ -68,15 +71,14 @@ class BookshelfAdapter(internal val bookshelf : MutableList<Book>, val act : Act
     interface OnItemClicked {
         fun onItemClicked(book: Book)
         fun onDeleteClicked(book: Book)
+        fun onCardClicked(book: Book)
     }
 
     //set onclick variable
     var onClicked : OnItemClicked? = null
-    var onDeleteClicked : OnItemClicked? = null
 
     fun callableOnClick(onBookClicked: OnItemClicked) {
         this.onClicked = onBookClicked
-        this.onDeleteClicked = onDeleteClicked
     }
 
 }
