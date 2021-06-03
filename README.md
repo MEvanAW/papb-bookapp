@@ -2,7 +2,25 @@
 
 <img src="https://lh3.googleusercontent.com/EZQt9gl3JkT9_yWlS0TwFLN_F4siiEk_RVqUOeGXgN_nqcTfw0rdDbsS_jegbUP9U21x_WRdD6gmlEdS_V-rFMDsEHCbIA2_bcYGyHTZefjaLc4T50ku-6gZNs6lStfh" width="100" height="100">
 
-BookApp is an Android app built for users to read their favorite books. Functional features of <b>peek a book</b> are browsing books, viewing curated book list, viewing book details, reading books, and creating book-to-read list. Other additional feature is reading quotes while scrolling down on the app.
+<b>peek a book</b> is an Android app built for users to read their favorite books freely. With <b>peek a book</b>, users can read books anywhere and anytime, as long as they are connected to the internet. Users can also put some books they want to read in the future, in the bookshelf. On the profile page, users can track books they have read, books they want to read, and books they are currently reading. This application also gives users quotes to read while using the app. <b>peek a book</b> is also useful for those who want to build a lasting reading habit since it always reminds users to pick up their reading. This mobile application retrieves books from [Google Books APIs](https://developers.google.com/books).
+
+## Installation
+
+There is currently no release yet. You may clone the project and run the debug signature of the app in Android Studio.
+
+Clone <b>peek a book</b> to your local machine
+```bash 
+  git clone https://github.com/MEvanAW/papb-bookapp.git
+```
+
+## Features
+
+- Browsing books
+- Viewing curated book list
+- Viewing book details
+- Reading books
+- Creating books-to-read list
+- Reading quotes while scrolling down on the app
 
 ## Project Status
 
@@ -17,10 +35,6 @@ This application uses MVVM architecture because it is the most relevant architec
 Currently, this application has 2 types of [lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle) overrides:
 1. [onCreate()](https://developer.android.com/reference/android/app/Activity#onCreate(android.os.Bundle)), which are called when the system first creates the activity. This method is used to fetch data via ViewModel and set some click listeners.
 2. [onResume()](https://developer.android.com/reference/android/app/Activity#onResume()), which is called after [onStart()](https://developer.android.com/reference/android/app/Activity#onStart()) or [onPause()](https://developer.android.com/reference/android/app/Activity#onPause()) method, makes the activity available to interact with user. This method can be found in MainActivity and BookDetailActivity, in which the quote section will automatically refresh and generate a new quote.
-
-## Installation
-
-There is currently no release yet. You may clone the project and run the debug signature of the app in Android Studio.
 
 ## Screenshots
 
@@ -55,10 +69,15 @@ Contains books that the user has read before.
 
 <img src="https://user-images.githubusercontent.com/50491841/119217110-1c0ee900-bb02-11eb-9f89-91529acb3844.jpg" width="270" height="480">
 
+## Authors
+- [Indira Pravianti](https://github.com/indirapravianti)
+- [M. Evan Anindya W.](https://github.com/MEvanAW)
+- [Muhammad Nauval Rafli](https://github.com/nauvalrafli)
+
 ## Contributing
 
 We currently only accept contributions from collaborators.
 
 ## Support
 
-If You need any help, You can contact Evan as the repository owner at evananindya@mail.ugm.ac.id
+If you need any help, You can contact Evan as the repository owner at evananindya@mail.ugm.ac.id
