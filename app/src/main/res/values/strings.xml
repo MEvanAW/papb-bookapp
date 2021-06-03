@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BookApp</string>
+    <string name="app_name">peek a book</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="topic">Topic</string>
     <string name="rating">Rating</string>
